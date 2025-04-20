@@ -64,15 +64,59 @@ public class RunSimulation {
             String pick = scanner.nextLine();
 
             if (pick == "1"){
-                //still need to implement with the trackobjects in space
-                System.out.println("Currently tracking all the objets in space");
+                boolean backOne = false;
+                while(!backOne){
+                    System.out.println("\n ----- Track Objects in Space -----");
+                    System.out.println("1. Rocket Body");
+                    System.out.println("2. Debris");
+                    System.out.println("3. Payload");
+                    System.out.println("4. Unknown");
+                    System.out.println("5. Back");
+                    System.out.println("Please select an option (1-5)");
+                    String choice = scanner.nextLine();
+
+                    if(choice == "1"){
+
+                    } else if(choice == "2"){
+
+                    } else if(choice == "3"){
+
+                    } else if(choice == "4"){
+
+                    } else if(choice == "5"){
+                        backOne = true;
+                    } else {
+                        System.out.println("Invalid choice, please select an option between 1-5");
+                    }
+                }
+
             }else if (pick == "2"){
-                //implement with replace with assesorbitstatus
-                System.out.println("Currently assesing the orbit status");
+                boolean backTwo = false;
+                while(!backTwo){
+                    System.out.println("\n ----- Assess the Orbit Status -----");
+                    System.out.println("1. Track Objects in LEO");
+                    System.out.println("2. Assess if debris is still in orbit");
+                    System.out.println("3. Back");
+                    System.out.println("Please select an option (1-3)");
+                    String choice = scanner.nextLine();
+
+                    if(choice == "1"){
+                        tracker.trackObjectsInSpace();
+
+                    } else if(choice == "2"){
+                        tracker.assessOrbitStatus();
+
+                    } else if(choice == "3"){
+                        backTwo = true;
+                    } else {
+                        System.out.println("Invalid choice, please select an option between 1-3");
+                    }
+                }
+
             }else if (pick == "3"){
                 back = true;
             }else{
-                System.out.println("You c=have chosen an invalid input please pick an option form 1-3.");
+                System.out.println("You have chosen an invalid input please pick an option form 1-3.");
             }
         }
     }

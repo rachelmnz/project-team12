@@ -19,5 +19,18 @@ public class TrackingSystem {
         return;
     }
 
+    public void trackObjectsInSpace(){
+        //
+        return;
+    }
+
+    public void assessOrbitStatus(){
+        //
+        return;
+    }
+
+
+
+
 
 }
