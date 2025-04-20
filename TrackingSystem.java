@@ -14,4 +14,10 @@ public class TrackingSystem {
     public List<SpaceObject> getAllObjects() {
         return spaceObjects;
     }
+
+    public void writeUpdatedReport(String a){
+        return;
+    }
+
+
 }
