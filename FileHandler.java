@@ -1,42 +1,84 @@
-import java.io.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class FileHandler {
-    private TrackingSystem trackingSystem;
+    public static List<SpaceObject> loadSpaceObjects(String filePath) {
+        List<SpaceObject> objects = new ArrayList<>();
 
-    public FileHandler(TrackingSystem trackingSystem) {
-        this.trackingSystem = trackingSystem;
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            br.readLine(); // skip header
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(",", -1); // -1 to include trailing empty fields
+
+                if (data.length >= 20) {
+                    try {
+                        String recordId = data[0];
+                        String satelliteName = data[2];
+                        String country = data[3];
+                        String orbitType = data[4];
+                        String objectType = data[5];
+                        int launchYear = parseIntSafe(data[6]);
+                        String launchSite = data[7];
+                        double longitude = parseDoubleSafe(data[8]);
+                        double avgLongitude = parseDoubleSafe(data[9]);
+                        String geohash = data[10];
+                        int daysOld = parseIntSafe(data[18]);
+                        int conjunctionCount = parseIntSafe(data[19]);
+
+                        SpaceObject obj = null;
+
+                        switch (objectType.toUpperCase()) {
+                            case "DEBRIS":
+                                obj = new Debris(recordId, satelliteName, country, orbitType, launchYear,
+                                                 launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
+                                break;
+                            case "ROCKET BODY":
+                                //obj = new RocketBody(recordId, satelliteName, country, orbitType, launchYear,
+                                //                     launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
+                                break;
+                            case "PAYLOAD":
+                                //obj = new Payload(recordId, satelliteName, country, orbitType, launchYear,
+                                //                  launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
+                                break;
+                            default:
+                                //obj = new UnknownObject(recordId, satelliteName, country, orbitType, launchYear,
+                                //                        launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
+                        }
+
+                        if (obj != null) {
+                            objects.add(obj);
+                        }
+                    } catch (Exception e) {
+                        System.err.println("Error parsing line: " + line);
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return objects;
     }
 
-    public void loadData(String filename) {
-        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-            String header = br.readLine(); // skip header
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] tokens = line.split(",");
-                String recordId = tokens[0].trim();
-                String satelliteName = tokens[1].trim();
-                String country = tokens[2].trim();
-                String orbitType = tokens[3].trim();
-                int launchYear = Integer.parseInt(tokens[4].trim());
-                String launchSite = tokens[5].trim();
-                double longitude = Double.parseDouble(tokens[6].trim());
-                double avgLongitude = Double.parseDouble(tokens[7].trim());
-                String geohash = tokens[8].trim();
-                int daysOld = Integer.parseInt(tokens[9].trim());
-                int conjunctionCount = Integer.parseInt(tokens[10].trim());
+    private static int parseIntSafe(String str) {
+        try {
+            return Integer.parseInt(str.trim());
+        } catch (Exception e) {
+            return 0;
+        }
+    }
 
-                SpaceObject obj;
-                if (satelliteName.toLowerCase().contains("debris")) {
-                    obj = new Debris(recordId, satelliteName, country, orbitType, launchYear, launchSite,
-                                     longitude, avgLongitude, geohash, daysOld, conjunctionCount);
-                } else {
-                    obj = new Satellite(recordId, satelliteName, country, orbitType, launchYear, launchSite,
-                                        longitude, avgLongitude, geohash, daysOld, conjunctionCount);
-                }
-                trackingSystem.addSpaceObject(obj);
-            }
-        } catch (IOException | NumberFormatException e) {
-            System.out.println("Error reading file: " + e.getMessage());
+    private static double parseDoubleSafe(String str) {
+        try {
+            return Double.parseDouble(str.trim());
+        } catch (Exception e) {
+            return 0.0;
         }
     }
 }
+

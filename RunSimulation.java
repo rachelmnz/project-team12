@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Scanner;
 
 public class RunSimulation {
@@ -5,8 +6,8 @@ public class RunSimulation {
     public static final Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) {
         TrackingSystem tracker = new TrackingSystem();
-        FileHandler fileHandler = new FileHandler(tracker);
-        fileHandler.loadData("debris_data.csv");
+        List<SpaceObject> spaceObjects = FileHandler.loadSpaceObjects("rso_metrics.csv");
+
 
         System.out.println("Loaded objects:");
         for (SpaceObject obj : tracker.getAllObjects()) {

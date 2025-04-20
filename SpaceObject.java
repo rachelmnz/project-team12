@@ -1,8 +1,9 @@
-public abstract class SpaceObject {
+public class SpaceObject {
     protected String recordId;
     protected String satelliteName;
     protected String country;
     protected String orbitType;
+    protected String objectType;
     protected int launchYear;
     protected String launchSite;
     protected double longitude;
@@ -11,9 +12,10 @@ public abstract class SpaceObject {
     protected int daysOld;
     protected int conjunctionCount;
 
+    
     public SpaceObject(String recordId, String satelliteName, String country, String orbitType,
-                       int launchYear, String launchSite, double longitude, double avgLongitude,
-                       String geohash, int daysOld, int conjunctionCount) {
+                   int launchYear, String launchSite, double longitude, double avgLongitude,
+                   String geohash, int daysOld, int conjunctionCount) {
         this.recordId = recordId;
         this.satelliteName = satelliteName;
         this.country = country;
@@ -27,5 +29,8 @@ public abstract class SpaceObject {
         this.conjunctionCount = conjunctionCount;
     }
 
-    public abstract void displayInfo();
+
+    public void displayInfo(){
+        return;
+    }
 }
