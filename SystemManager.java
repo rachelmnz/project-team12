@@ -1,7 +1,7 @@
 import java.util.List;
 import java.util.Scanner;
 
-public class RunSimulation {
+public class SystemManager {
 
     public static final Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) {
