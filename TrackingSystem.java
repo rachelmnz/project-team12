@@ -1,18 +1,33 @@
 import java.util.*;
 
 public class TrackingSystem {
-    private List<SpaceObject> spaceObjects;
+    private List<SpaceObject> allObjects;
 
-    public TrackingSystem() {
-        spaceObjects = new ArrayList<>();
-    }
-
-    public void addSpaceObject(SpaceObject obj) {
-        spaceObjects.add(obj);
+    public TrackingSystem(List<SpaceObject> objects) {
+        this.allObjects = objects;
     }
 
     public List<SpaceObject> getAllObjects() {
-        return spaceObjects;
+        return allObjects;
+    }
+
+    public TrackingSystem() {
+        allObjects = new ArrayList<>();
+    }
+
+    public void addSpaceObject(SpaceObject obj) {
+        allObjects.add(obj);
+    }
+
+
+    public List<SpaceObject> getObjectsByType(String type) {
+        List<SpaceObject> result = new ArrayList<>();
+        for (SpaceObject obj : allObjects) {
+            if (obj.getClass().getSimpleName().equalsIgnoreCase(type)) {
+                result.add(obj);
+            }
+        }
+        return result;
     }
 
     public void writeUpdatedReport(String a){

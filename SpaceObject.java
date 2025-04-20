@@ -12,7 +12,7 @@ public class SpaceObject {
     protected int daysOld;
     protected int conjunctionCount;
 
-    
+
     public SpaceObject(String recordId, String satelliteName, String country, String orbitType,
                    int launchYear, String launchSite, double longitude, double avgLongitude,
                    String geohash, int daysOld, int conjunctionCount) {
@@ -29,8 +29,15 @@ public class SpaceObject {
         this.conjunctionCount = conjunctionCount;
     }
 
-
-    public void displayInfo(){
-        return;
+    public void displayInfo() {
+        System.out.println(
+            "ID: " + recordId + ", Name: " + satelliteName +
+            ", Country: " + country + ", Orbit: " + orbitType +
+            ", Year: " + launchYear + ", Site: " + launchSite +
+            ", Lon: " + longitude + ", Avg Lon: " + avgLongitude +
+            ", Geohash: " + geohash + ", Days Old: " + daysOld +
+            ", Conjunctions: " + conjunctionCount
+        );
     }
+    
 }

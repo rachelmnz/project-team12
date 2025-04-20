@@ -5,9 +5,8 @@ public class RunSimulation {
 
     public static final Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) {
-        TrackingSystem tracker = new TrackingSystem();
         List<SpaceObject> spaceObjects = FileHandler.loadSpaceObjects("rso_metrics.csv");
-
+        TrackingSystem tracker = new TrackingSystem(spaceObjects);
 
         System.out.println("Loaded objects:");
         for (SpaceObject obj : tracker.getAllObjects()) {
@@ -31,17 +30,17 @@ public class RunSimulation {
                 tracker.writeUpdatedReport("This is the updated debrisreport.csv");
                 //fileHandler.savelog("simulation.log");
                 exitProgram = true;
-            }else if (userType == "1"){
+            }else if(userType.equals("1")){
                 scientistMenu(scanner, tracker);
-            }else if (userType == "2"){
+            }else if (userType.equals("2")){
                 spaceAgencyMenu(scanner, tracker);
-            }else if (userType == "3"){
+            }else if (userType.equals("3")){
                 policyMakerMenu(scanner, tracker);
                 System.out.println("We are working on the policy maker menu");
-            }else if (userType == "4"){
+            }else if (userType.equals("4")){
                 administratorMenu(scanner, tracker);
                 System.out.println("We are currently working on the Administrator menu");
-            }else if (userType == "5"){
+            }else if (userType.equals("5")){
                 tracker.writeUpdatedReport("updated debris report.csv");
                 //fileHandler.savelog("simulation.log");
                 exitProgram = true;
@@ -64,7 +63,7 @@ public class RunSimulation {
 
             String pick = scanner.nextLine();
 
-            if (pick == "1"){
+            if (pick.equals("1")){
                 boolean backOne = false;
                 while(!backOne){
                     System.out.println("\n ----- Track Objects in Space -----");
@@ -76,22 +75,38 @@ public class RunSimulation {
                     System.out.println("Please select an option (1-5)");
                     String choice = scanner.nextLine();
 
-                    if(choice == "1"){
+                    if(choice.equals("1")){
+                        List<SpaceObject> rockets = tracker.getObjectsByType("RocketBody");
+                        for (SpaceObject rocket : rockets) {
+                            rocket.displayInfo();
+                        }
 
-                    } else if(choice == "2"){
+                    } else if(choice.equals("2")){
+                        List<SpaceObject> debris = tracker.getObjectsByType("Debris");
+                        for (SpaceObject d : debris) {
+                            d.displayInfo();
+                        }
 
-                    } else if(choice == "3"){
+                    } else if(choice.equals("3")){
+                        List<SpaceObject> payloads = tracker.getObjectsByType("Payload");
+                        for (SpaceObject p : payloads) {
+                            p.displayInfo();
+                        }
 
-                    } else if(choice == "4"){
+                    } else if(choice.equals("4")){
+                        List<SpaceObject> unknowns = tracker.getObjectsByType("Unknown");
+                        for (SpaceObject u : unknowns) {
+                            u.displayInfo();
+                        }
 
-                    } else if(choice == "5"){
+                    } else if(choice.equals("5")){
                         backOne = true;
                     } else {
                         System.out.println("Invalid choice, please select an option between 1-5");
                     }
                 }
 
-            }else if (pick == "2"){
+            }else if (pick.equals("2")){
                 boolean backTwo = false;
                 while(!backTwo){
                     System.out.println("\n ----- Assess the Orbit Status -----");
@@ -101,20 +116,20 @@ public class RunSimulation {
                     System.out.println("Please select an option (1-3)");
                     String choice = scanner.nextLine();
 
-                    if(choice == "1"){
+                    if(choice.equals("1")){
                         tracker.trackObjectsInSpace();
 
-                    } else if(choice == "2"){
+                    } else if(choice.equals("2")){
                         tracker.assessOrbitStatus();
 
-                    } else if(choice == "3"){
+                    } else if(choice.equals("3")){
                         backTwo = true;
                     } else {
                         System.out.println("Invalid choice, please select an option between 1-3");
                     }
                 }
 
-            }else if (pick == "3"){
+            }else if (pick.equals("3")){
                 back = true;
             }else{
                 System.out.println("You have chosen an invalid input please pick an option form 1-3.");
@@ -133,13 +148,13 @@ public class RunSimulation {
 
             String selection = scanner.nextLine();
 
-            if (selection == "1"){
+            if (selection.equals("1")){
 
                 System.out.println("Currently Analyzing the long term impact");
-            }else if (selection == "2"){
+            }else if (selection.equals("2")){
 
                 System.out.println("Currently generating the Density Reports");
-            }else if (selection == "3"){
+            }else if (selection.equals("3")){
                 back = true;
             }else{
                 System.out.println("You input an invalid choice, please enter a choice from 1-3.");
@@ -158,11 +173,11 @@ public class RunSimulation {
 
             String choice = scanner.nextLine();
 
-            if(choice == "1"){
+            if(choice.equals("1")){
                 reviewDebrisImpact();
-            }else if (choice == "2"){
+            }else if (choice.equals("2")){
                 assessMissionRisk();
-            }else if (choice =="3"){
+            }else if (choice.equals("3")){
                 back = true;
             }else{
                 System.out.println("Invalis input, please input a choice of 1-3");
@@ -182,13 +197,13 @@ public class RunSimulation {
 
             String opt = scanner.nextLine();
 
-            if(opt == "1"){
+            if(opt.equals("1")){
                 createUser();
-            }else if(opt == "2"){
+            }else if(opt.equals("2")){
                 manageUser();
-            }else if(opt == "3"){
+            }else if(opt.equals("3")){
                 deleteUser();
-            }else if(opt == "4"){
+            }else if(opt.equals("4")){
                 back=true;
             }else{
                 System.out.println("Invalid input, please choose an option from 1-4");
