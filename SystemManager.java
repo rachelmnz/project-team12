@@ -1,9 +1,33 @@
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * The {@code SystemManager} class acts as the main entry point for a space debris tracking system.
+ * It loads space object data, initializes the tracking system, and provides a text-based interface 
+ * for different user roles to interact with the system.
+ *
+ * <p>
+ * The main user roles include:
+ * <ul>
+ *     <li>Scientist</li>
+ *     <li>Space Agency Representative</li>
+ *     <li>Policy Maker</li>
+ *     <li>Administrator</li>
+ * </ul>
+ * </p>
+ */
 public class SystemManager {
 
     public static final Scanner scanner = new Scanner(System.in);
+
+    /**
+     * Main execution method that starts the program.
+     * <p>
+     * Loads space object data from a CSV file and presents a main menu
+     * for selecting user types. Each user type has a dedicated sub-menu
+     * with actions relevant to their role.
+     * </p>
+     */
     public static void main() {
         List<SpaceObject> spaceObjects = FileHandler.loadSpaceObjects("rso_metrics.csv");
         TrackingSystem tracker = new TrackingSystem(spaceObjects);
@@ -52,6 +76,17 @@ public class SystemManager {
         System.out.println("You are exiting the program. Have a good day!");
         scanner.close();
     }
+
+    /**
+     * Displays the Scientist menu and allows the user to:
+     * <ul>
+     *     <li>Track objects in space by category</li>
+     *     <li>Assess the orbit status of space objects</li>
+     * </ul>
+     *
+     * @param scanner the scanner for user input
+     * @param tracker the tracking system containing space objects
+     */
     private static void scientistMenu(Scanner scanner, TrackingSystem tracker){
         boolean back = false;
         while (!back){
@@ -137,6 +172,16 @@ public class SystemManager {
         }
     }
 
+    /**
+     * Displays the Space Agency menu and allows users to:
+     * <ul>
+     *     <li>Analyze long-term impact of space debris</li>
+     *     <li>Generate density reports</li>
+     * </ul>
+     *
+     * @param scanner the scanner for user input
+     * @param tracker the tracking system containing space objects
+     */
     private static void spaceAgencyMenu(Scanner scanner, TrackingSystem tracker){
         boolean back = false;
         while(!back){
@@ -162,6 +207,16 @@ public class SystemManager {
         }
     }
 
+    /**
+     * Displays the Policy Maker menu and allows users to:
+     * <ul>
+     *     <li>Review debris impact reports</li>
+     *     <li>Assess risk levels of future space missions</li>
+     * </ul>
+     *
+     * @param scanner the scanner for user input
+     * @param tracker the tracking system containing space objects
+     */
     private static void policyMakerMenu( Scanner scanner,TrackingSystem tracker){
         boolean back = false;
         while(!back){
@@ -185,6 +240,17 @@ public class SystemManager {
         }
     }
 
+    /**
+     * Displays the Administrator menu and allows users to:
+     * <ul>
+     *     <li>Create a user</li>
+     *     <li>Manage users</li>
+     *     <li>Delete a user</li>
+     * </ul>
+     *
+     * @param scanner the scanner for user input
+     * @param tracker the tracking system containing space objects
+     */
     private static void administratorMenu(Scanner scanner, TrackingSystem tracker){
         boolean back = false;
         while(!back){

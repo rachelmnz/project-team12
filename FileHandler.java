@@ -4,7 +4,23 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * The {@code FileHandler} class provides utility methods to load and parse space object data 
+ * from a CSV file. It supports converting lines of raw CSV data into {@link SpaceObject} instances.
+ */
 public class FileHandler {
+
+    /**
+     * Loads a list of {@link SpaceObject} instances from a CSV file at the specified path.
+     * <p>
+     * Each line is parsed into a specific subclass of {@code SpaceObject} based on the object type.
+     * Currently, only objects of type "DEBRIS" are instantiated; other types are recognized but not yet implemented.
+     * Lines with parsing errors or unexpected formats are skipped.
+     * </p>
+     *
+     * @param filePath the path to the CSV file containing space object data
+     * @return a list of {@code SpaceObject} instances parsed from the file
+     */
     public static List<SpaceObject> loadSpaceObjects(String filePath) {
         List<SpaceObject> objects = new ArrayList<>();
 
@@ -65,6 +81,13 @@ public class FileHandler {
         return objects;
     }
 
+    /**
+     * Safely parses an integer from the provided string.
+     * If parsing fails, returns 0.
+     *
+     * @param str the string to parse
+     * @return the parsed integer, or 0 if parsing fails
+     */
     private static int parseIntSafe(String str) {
         try {
             return Integer.parseInt(str.trim());
@@ -73,6 +96,13 @@ public class FileHandler {
         }
     }
 
+    /**
+     * Safely parses a double from the provided string.
+     * If parsing fails, returns 0.0.
+     *
+     * @param str the string to parse
+     * @return the parsed double, or 0.0 if parsing fails
+     */
     private static double parseDoubleSafe(String str) {
         try {
             return Double.parseDouble(str.trim());
