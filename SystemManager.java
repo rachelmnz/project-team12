@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class SystemManager {
 
     public static final Scanner scanner = new Scanner(System.in);
-    public static void main(String[] args) {
+    public static void main() {
         List<SpaceObject> spaceObjects = FileHandler.loadSpaceObjects("rso_metrics.csv");
         TrackingSystem tracker = new TrackingSystem(spaceObjects);
 
