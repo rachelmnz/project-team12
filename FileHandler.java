@@ -21,6 +21,7 @@ public class FileHandler {
      * @param filePath the path to the CSV file containing space object data
      * @return a list of {@code SpaceObject} instances
      */
+    //fix -> hash map!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     public static List<SpaceObject> loadSpaceObjects(String filePath) {
         List<SpaceObject> objects = new ArrayList<>();
 
