@@ -127,9 +127,9 @@ public class RunSimulation {
                     String choice = scanner.nextLine();
 
                     if (choice.equals("1")) {
-                        tracker.trackObjectsInSpace();
+                        tracker.trackObjectsInLEO();
                     } else if (choice.equals("2")) {
-                        tracker.assessOrbitStatus();
+                        tracker.assessDebrisInOrbit();
                     } else if (choice.equals("3")) {
                         backTwo = true;
                     } else {
