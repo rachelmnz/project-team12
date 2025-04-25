@@ -1,22 +1,42 @@
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * The {@code RunSimulation} class is the main entry point for the space debris tracking simulation.
+ * It provides a command-line interface for different user types to interact with the tracking system.
+ * Users can choose their role and access specific functionalities related to space object tracking,
+ * analysis, and reporting.
+ *
+ * <p>This class includes methods for each user type's menu, allowing users to perform actions such as
+ * tracking objects, assessing orbit status, generating reports, and managing users.
+ */
 public class RunSimulation {
 
+    /**
+     * A shared {@code Scanner} instance for reading user input.
+     */
     public static final Scanner scanner = new Scanner(System.in);
 
+    /**
+     * The main method serves as the entry point for the program. It initializes the tracking system
+     * by loading space objects from a CSV file and provides a menu-driven interface for user interaction.
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args) {
         List<SpaceObject> spaceObjects = FileHandler.loadSpaceObjects("rso_metrics.csv");
         TrackingSystem tracker = new TrackingSystem(spaceObjects);
 
+        /* 
         System.out.println("Loaded objects:");
         for (SpaceObject obj : tracker.getAllObjects()) {
             obj.displayInfo();
-        }
+        }*/
+
         boolean exitProgram = false;
 
         while(!exitProgram){
-            System.out.println("/n-----Main Menu-----");
+            System.out.println("\n-----Main Menu-----");
             System.out.println("1. Scientist");
             System.out.println("2. Space Agency Representative");
             System.out.println("3. Policy Maker");
@@ -97,16 +117,19 @@ public class RunSimulation {
                         }
                     } else if (choice.equals("2")) {
                         List<SpaceObject> debris = tracker.getObjectsByType("DEBRIS");
+                        System.out.println("\n--- Debris Details ---");
                         for (SpaceObject d : debris) {
                             d.displayInfo();
                         }
                     } else if (choice.equals("3")) {
                         List<SpaceObject> payloads = tracker.getObjectsByType("PAYLOAD");
+                        System.out.println("\n--- Payload Details ---");
                         for (SpaceObject p : payloads) {
                             p.displayInfo();
                         }
                     } else if (choice.equals("4")) {
                         List<SpaceObject> unknowns = tracker.getObjectsByType("UNKNOWN");
+                        System.out.println("\n--- Unknown Object Details ---");
                         for (SpaceObject u : unknowns) {
                             u.displayInfo();
                         }
@@ -147,6 +170,16 @@ public class RunSimulation {
         }
     }
 
+    /**
+     * Displays the Space Agency menu and allows the user to:
+     * <ul>
+     *     <li>Analyze the long-term impact of space debris</li>
+     *     <li>Generate density reports</li>
+     * </ul>
+     *
+     * @param scanner the scanner for user input
+     * @param tracker the tracking system containing space objects
+     */
     private static void spaceAgencyMenu(Scanner scanner, TrackingSystem tracker){
         boolean back = false;
         while(!back){
@@ -172,6 +205,16 @@ public class RunSimulation {
         }
     }
 
+    /**
+     * Displays the Policymaker menu and allows the user to:
+     * <ul>
+     *     <li>Review reports on debris impact</li>
+     *     <li>Assess the risk levels for future space missions</li>
+     * </ul>
+     *
+     * @param scanner the scanner for user input
+     * @param tracker the tracking system containing space objects
+     */
     private static void policyMakerMenu( Scanner scanner,TrackingSystem tracker){
         boolean back = false;
         while(!back){
@@ -195,6 +238,17 @@ public class RunSimulation {
         }
     }
 
+    /**
+     * Displays the Administrator menu and allows the user to:
+     * <ul>
+     *     <li>Create new users</li>
+     *     <li>Manage existing users</li>
+     *     <li>Delete users</li>
+     * </ul>
+     *
+     * @param scanner the scanner for user input
+     * @param tracker the tracking system containing space objects
+     */
     private static void administratorMenu(Scanner scanner, TrackingSystem tracker){
         boolean back = false;
         while(!back){

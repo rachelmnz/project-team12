@@ -3,25 +3,63 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.IOException;
 
+/**
+ * The {@code TrackingSystem} class is responsible for managing and analyzing space objects.
+ * It provides methods to track objects by type or orbit, assess debris in orbit, and generate
+ * reports on orbital status and exited debris.
+ *
+ * <p>This class supports operations such as:
+ * <ul>
+ *     <li>Tracking objects in Low Earth Orbit (LEO)</li>
+ *     <li>Assessing the orbital status of debris</li>
+ *     <li>Writing updated orbit assessments to a CSV file</li>
+ *     <li>Generating a report on debris that has exited orbit</li>
+ * </ul>
+ */
 public class TrackingSystem {
+
     private List<SpaceObject> allObjects;
 
+    /**
+     * Constructs a {@code TrackingSystem} with a predefined list of space objects.
+     *
+     * @param objects the list of {@code SpaceObject} instances to manage
+     */
     public TrackingSystem(List<SpaceObject> objects) {
         this.allObjects = objects;
     }
 
-    public List<SpaceObject> getAllObjects() {
-        return allObjects;
-    }
-
+    /**
+     * Constructs an empty {@code TrackingSystem}.
+     */
     public TrackingSystem() {
         allObjects = new ArrayList<>();
     }
 
+    /**
+     * Returns the list of all space objects managed by the tracking system.
+     *
+     * @return the list of {@code SpaceObject} instances
+     */
+    public List<SpaceObject> getAllObjects() {
+        return allObjects;
+    }
+
+    /**
+     * Adds a new space object to the tracking system.
+     *
+     * @param obj the {@code SpaceObject} to add
+     */
     public void addSpaceObject(SpaceObject obj) {
         allObjects.add(obj);
     }
 
+    /**
+     * Retrieves a list of space objects filtered by their type.
+     *
+     * @param type the type of space objects to retrieve (e.g., "Debris", "Rocket Body")
+     * @return a list of {@code SpaceObject} instances matching the specified type
+     */
     public List<SpaceObject> getObjectsByType(String type) {
         List<SpaceObject> result = new ArrayList<>();
         for (SpaceObject obj : allObjects) {
@@ -32,6 +70,12 @@ public class TrackingSystem {
         return result;
     }
 
+    /**
+     * Retrieves a list of space objects filtered by their orbit type.
+     *
+     * @param orbitType the orbit type to filter by (e.g., "LEO", "GEO")
+     * @return a list of {@code SpaceObject} instances matching the specified orbit type
+     */
     public List<SpaceObject> getObjectsByOrbit(String orbitType) {
         List<SpaceObject> result = new ArrayList<>();
         for (SpaceObject obj : allObjects) {
@@ -40,8 +84,11 @@ public class TrackingSystem {
             }
         }
         return result;
-    }    
+    }
 
+    /**
+     * Tracks and displays all objects currently in Low Earth Orbit (LEO).
+     */
     public void trackObjectsInLEO() {
         List<SpaceObject> leoObjects = getObjectsByOrbit("LEO");
     
@@ -64,6 +111,11 @@ public class TrackingSystem {
         }
     }
 
+    /**
+     * Assesses the orbital status of debris and prints a detailed report.
+     * The report includes whether debris is still in orbit, has exited orbit,
+     * or has an uncertain status, along with its risk level.
+     */
     public void assessDebrisInOrbit() {
         System.out.println("\n--- Debris Orbital Assessment ---");
     
@@ -112,6 +164,12 @@ public class TrackingSystem {
         }
     }
 
+    /**
+     * Writes an updated orbit assessment to a CSV file. The CSV includes details
+     * about each debris object, its orbital status, and its risk level.
+     *
+     * @param filename the name of the CSV file to write
+     */
     public void writeUpdatedOrbitCSV(String filename) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
             // Header row
@@ -148,6 +206,13 @@ public class TrackingSystem {
         }
     }
 
+    /**
+     * Writes a report on debris that has exited orbit to a text file. The report
+     * includes details about each debris object and a summary of the counts of
+     * debris still in orbit and exited debris.
+     *
+     * @param filename the name of the text file to write
+     */
     public void writeExitedDebrisReport(String filename) {
         int stillInOrbitCount = 0;
         int exitedOrbitCount = 0;
@@ -190,6 +255,4 @@ public class TrackingSystem {
             e.printStackTrace();
         }
     }
-    
-    
 }
