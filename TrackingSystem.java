@@ -1,4 +1,7 @@
 import java.util.*;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.IOException;
 
 public class TrackingSystem {
     private List<SpaceObject> allObjects;
@@ -38,16 +41,6 @@ public class TrackingSystem {
         }
         return result;
     }    
-    
-
-    public void writeUpdatedReport(String a){
-        return;
-    }
-
-    public void trackObjectsInSpace(){
-        //
-        return;
-    }
 
     public void trackObjectsInLEO() {
         List<SpaceObject> leoObjects = getObjectsByOrbit("LEO");
@@ -118,5 +111,85 @@ public class TrackingSystem {
             }
         }
     }
+
+    public void writeUpdatedOrbitCSV(String filename) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+            // Header row
+            writer.println("record_id,satellite_name,country,orbit_type,launch_year,launch_site,longitude,avg_longitude,geohash,days_old,conjunction_count,still_in_orbit,risk_level");
+    
+            for (SpaceObject obj : allObjects) {
+                if (!(obj instanceof Debris)) continue;
+    
+                boolean stillInOrbit = obj.getOrbitType() != null && !obj.getOrbitType().equalsIgnoreCase("UNKNOWN") &&
+                                       obj.getLongitude() != 0.0 &&
+                                       obj.getDaysOld() < 15000 &&
+                                       obj.getConjunctionCount() >= 1;
+    
+                boolean exitedOrbit = (obj.getOrbitType() == null || obj.getOrbitType().equalsIgnoreCase("UNKNOWN")) &&
+                                      obj.getLongitude() == 0.0 &&
+                                      obj.getDaysOld() > 15000 &&
+                                      obj.getConjunctionCount() == 0;
+    
+                // Compute risk level
+                double drift = Math.abs(obj.getLongitude() - obj.getAvgLongitude());
+                String riskLevel = (drift > 50) ? "High" : (drift > 10) ? "Moderate" : "Low";
+    
+                writer.printf("%s,%s,%s,%s,%d,%s,%.6f,%.6f,%s,%d,%d,%s,%s\n",
+                        obj.getRecordId(), obj.getSatelliteName(), obj.getCountry(), obj.getOrbitType(),
+                        obj.getLaunchYear(), obj.getLaunchSite(), obj.getLongitude(), obj.getAvgLongitude(),
+                        obj.getGeohash(), obj.getDaysOld(), obj.getConjunctionCount(),
+                        stillInOrbit, riskLevel);
+            }
+    
+            System.out.println("CSV with orbit assessments saved to: " + filename);
+        } catch (IOException e) {
+            System.err.println("Failed to write orbit assessment CSV");
+            e.printStackTrace();
+        }
+    }
+
+    public void writeExitedDebrisReport(String filename) {
+        int stillInOrbitCount = 0;
+        int exitedOrbitCount = 0;
+    
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+            writer.println("Exited Debris Report");
+            writer.println("====================\n");
+    
+            for (SpaceObject obj : allObjects) {
+                if (!(obj instanceof Debris)) continue;
+    
+                boolean stillInOrbit = obj.getOrbitType() != null && !obj.getOrbitType().equalsIgnoreCase("UNKNOWN") &&
+                                       obj.getLongitude() != 0.0 &&
+                                       obj.getDaysOld() < 15000 &&
+                                       obj.getConjunctionCount() >= 1;
+    
+                boolean exitedOrbit = (obj.getOrbitType() == null || obj.getOrbitType().equalsIgnoreCase("UNKNOWN")) &&
+                                      obj.getLongitude() == 0.0 &&
+                                      obj.getDaysOld() > 15000 &&
+                                      obj.getConjunctionCount() == 0;
+    
+                if (stillInOrbit) {
+                    stillInOrbitCount++;
+                } else if (exitedOrbit) {
+                    exitedOrbitCount++;
+                    writer.printf("ID: %s | Name: %s | Country: %s | Orbit: %s | Year: %d | Site: %s | Lon: %.2f | Avg Lon: %.2f | Geohash: %s | Days Old: %d\n",
+                            obj.getRecordId(), obj.getSatelliteName(), obj.getCountry(), obj.getOrbitType(),
+                            obj.getLaunchYear(), obj.getLaunchSite(), obj.getLongitude(), obj.getAvgLongitude(),
+                            obj.getGeohash(), obj.getDaysOld());
+                }
+            }
+    
+            writer.println("\nSummary:");
+            writer.println("Still in Orbit: " + stillInOrbitCount);
+            writer.println("Exited Orbit : " + exitedOrbitCount);
+    
+            System.out.println("TXT report on exited debris saved to: " + filename);
+        } catch (IOException e) {
+            System.err.println("Failed to write debris TXT report");
+            e.printStackTrace();
+        }
+    }
+    
     
 }

@@ -29,16 +29,13 @@ public class SpaceObject {
     }
 
     public void displayInfo() {
-        System.out.println(
-            "ID: " + recordId + ", Name: " + satelliteName +
-            ", Country: " + country + ", Orbit: " + orbitType +
-            ", Year: " + launchYear + ", Site: " + launchSite +
-            ", Lon: " + longitude + ", Avg Lon: " + avgLongitude +
-            ", Geohash: " + geohash + ", Days Old: " + daysOld +
-            ", Conjunctions: " + conjunctionCount
+        System.out.printf(
+            "%-8s | %-25s | %-10s | %-6s | %-6d | %-8s | %-10.2f | %-12.2f | %-12s | %-9d | %-14d\n",
+            recordId, satelliteName, country, orbitType, launchYear,
+            launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount
         );
     }
-
+    
     // Getters and Setters
     public String getRecordId() {
         return recordId;

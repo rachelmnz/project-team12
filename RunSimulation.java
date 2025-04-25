@@ -28,7 +28,7 @@ public class RunSimulation {
             String userType = input.toUpperCase();
 
             if(userType.equals("EXIT")){
-                tracker.writeUpdatedReport("This is the updated debrisreport.csv");
+                //tracker.writeUpdatedReport("This is the updated debrisreport.csv");
                 //fileHandler.savelog("simulation.log");
                 exitProgram = true;
             }else if(userType.equals("1")){
@@ -42,7 +42,7 @@ public class RunSimulation {
                 administratorMenu(scanner, tracker);
                 System.out.println("We are currently working on the Administrator menu");
             }else if (userType.equals("5")){
-                tracker.writeUpdatedReport("updated debris report.csv");
+                //tracker.writeUpdatedReport("updated debris report.csv");
                 //fileHandler.savelog("simulation.log");
                 exitProgram = true;
             }else{
@@ -130,6 +130,9 @@ public class RunSimulation {
                         tracker.trackObjectsInLEO();
                     } else if (choice.equals("2")) {
                         tracker.assessDebrisInOrbit();
+                        tracker.writeUpdatedOrbitCSV("updated_orbit_report.csv");
+                        tracker.writeExitedDebrisReport("exited_debris_report.txt");
+
                     } else if (choice.equals("3")) {
                         backTwo = true;
                     } else {

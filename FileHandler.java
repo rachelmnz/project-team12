@@ -32,12 +32,13 @@ public class FileHandler {
                         // Infer object type from satellite name
                         String nameUpper = satelliteName.toUpperCase();
                         String inferredType = "UNKNOWN";
+
                         if (nameUpper.contains("DEB")) {
                             inferredType = "DEBRIS";
                         } else if (nameUpper.contains("R/B") || nameUpper.contains("ROCKET")) {
                             inferredType = "ROCKET BODY";
-                        } else {
-                            inferredType = "PAYLOAD"; // Default if it doesn't look like debris or rocket
+                        } else if (nameUpper.contains("SAT") || nameUpper.contains("STARLINK") || nameUpper.contains("PAYLOAD")) {
+                            inferredType = "PAYLOAD";
                         }
 
                         SpaceObject obj = null;
@@ -55,9 +56,12 @@ public class FileHandler {
                                 obj = new Payload(recordId, satelliteName, country, orbitType, launchYear,
                                         launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
                                 break;
-                            default:
-                                // Optionally create a base SpaceObject if needed
+                            case "UNKNOWN":
+                                obj = new UnknownObject(recordId, satelliteName, country, orbitType, launchYear,
+                                        launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
                                 break;
+                            default:
+                                break; // Should not reach here
                         }
 
                         if (obj != null) {
