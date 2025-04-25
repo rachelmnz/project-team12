@@ -5,10 +5,8 @@ public class Debris extends SpaceObject {
                   String geohash, int daysOld, int conjunctionCount) {
         super(recordId, satelliteName, country, orbitType, launchYear, launchSite,
               longitude, avgLongitude, geohash, daysOld, conjunctionCount);
+        setObjectType("DEBRIS");
     }
-
-    public void displayInfo() {
-        System.out.println("Debris ID: " + recordId + ", Name: " + satelliteName + ", Country: " + country);
-    }
+    // No need to add getters and setters; they are inherited from SpaceObject.
 }
 

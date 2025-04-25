@@ -64,9 +64,9 @@ public class RunSimulation {
      * @param scanner the scanner for user input
      * @param tracker the tracking system containing space objects
      */
-    private static void scientistMenu(Scanner scanner, TrackingSystem tracker){
+    private static void scientistMenu(Scanner scanner, TrackingSystem tracker) {
         boolean back = false;
-        while (!back){
+        while (!back) {
             System.out.println("\n ----- Scientist Menu -----");
             System.out.println("1. Track the objects in space");
             System.out.println("2. Assess the orbit status");
@@ -75,9 +75,9 @@ public class RunSimulation {
 
             String pick = scanner.nextLine();
 
-            if (pick.equals("1")){
+            if (pick.equals("1")) {
                 boolean backOne = false;
-                while(!backOne){
+                while (!backOne) {
                     System.out.println("\n ----- Track Objects in Space -----");
                     System.out.println("1. Rocket Body");
                     System.out.println("2. Debris");
@@ -87,40 +87,38 @@ public class RunSimulation {
                     System.out.println("Please select an option (1-5)");
                     String choice = scanner.nextLine();
 
-                    if(choice.equals("1")){
-                        List<SpaceObject> rockets = tracker.getObjectsByType("RocketBody");
+                    if (choice.equals("1")) {
+                        // Fetch and display all Rocket Body objects
+                        List<SpaceObject> rockets = tracker.getObjectsByType("ROCKET BODY");
+                        System.out.println("\n--- Rocket Body Details ---");
                         for (SpaceObject rocket : rockets) {
+                            System.out.println("Rocket ID: " + rocket.getRecordId() + ", Name: " + rocket.getSatelliteName() + ", Country: " + rocket.getCountry());
                             rocket.displayInfo();
                         }
-
-                    } else if(choice.equals("2")){
-                        List<SpaceObject> debris = tracker.getObjectsByType("Debris");
+                    } else if (choice.equals("2")) {
+                        List<SpaceObject> debris = tracker.getObjectsByType("DEBRIS");
                         for (SpaceObject d : debris) {
                             d.displayInfo();
                         }
-
-                    } else if(choice.equals("3")){
-                        List<SpaceObject> payloads = tracker.getObjectsByType("Payload");
+                    } else if (choice.equals("3")) {
+                        List<SpaceObject> payloads = tracker.getObjectsByType("PAYLOAD");
                         for (SpaceObject p : payloads) {
                             p.displayInfo();
                         }
-
-                    } else if(choice.equals("4")){
-                        List<SpaceObject> unknowns = tracker.getObjectsByType("Unknown");
+                    } else if (choice.equals("4")) {
+                        List<SpaceObject> unknowns = tracker.getObjectsByType("UNKNOWN");
                         for (SpaceObject u : unknowns) {
                             u.displayInfo();
                         }
-
-                    } else if(choice.equals("5")){
+                    } else if (choice.equals("5")) {
                         backOne = true;
                     } else {
                         System.out.println("Invalid choice, please select an option between 1-5");
                     }
                 }
-
-            }else if (pick.equals("2")){
+            } else if (pick.equals("2")) {
                 boolean backTwo = false;
-                while(!backTwo){
+                while (!backTwo) {
                     System.out.println("\n ----- Assess the Orbit Status -----");
                     System.out.println("1. Track Objects in LEO");
                     System.out.println("2. Assess if debris is still in orbit");
@@ -128,23 +126,20 @@ public class RunSimulation {
                     System.out.println("Please select an option (1-3)");
                     String choice = scanner.nextLine();
 
-                    if(choice.equals("1")){
+                    if (choice.equals("1")) {
                         tracker.trackObjectsInSpace();
-
-                    } else if(choice.equals("2")){
+                    } else if (choice.equals("2")) {
                         tracker.assessOrbitStatus();
-
-                    } else if(choice.equals("3")){
+                    } else if (choice.equals("3")) {
                         backTwo = true;
                     } else {
                         System.out.println("Invalid choice, please select an option between 1-3");
                     }
                 }
-
-            }else if (pick.equals("3")){
+            } else if (pick.equals("3")) {
                 back = true;
-            }else{
-                System.out.println("You have chosen an invalid input please pick an option form 1-3.");
+            } else {
+                System.out.println("You have chosen an invalid input please pick an option from 1-3.");
             }
         }
     }

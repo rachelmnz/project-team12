@@ -19,16 +19,16 @@ public class TrackingSystem {
         allObjects.add(obj);
     }
 
-
     public List<SpaceObject> getObjectsByType(String type) {
         List<SpaceObject> result = new ArrayList<>();
         for (SpaceObject obj : allObjects) {
-            if (obj.getClass().getSimpleName().equalsIgnoreCase(type)) {
+            if (obj.getObjectType() != null && obj.getObjectType().equalsIgnoreCase(type.trim())) {
                 result.add(obj);
             }
         }
         return result;
     }
+    
 
     public void writeUpdatedReport(String a){
         return;
