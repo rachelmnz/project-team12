@@ -4,6 +4,8 @@ import java.util.Scanner;
 public class SystemManager {
     private final TrackingSystem tracker;
     private final Scanner scanner;
+    private final UserManager userManager = new UserManager();
+
 
     public SystemManager(TrackingSystem tracker, Scanner scanner) {
         this.tracker = tracker;
@@ -138,7 +140,8 @@ public class SystemManager {
             System.out.println("3. Back");
             System.out.println("Please select an option (1-3).");
 
-            String selection = scanner.nextLine();
+            String selection = safeReadLine();
+            if (selection == null) return;
 
             if (selection.equals("1")) {
                 System.out.println("Currently Analyzing the long term impact");
@@ -156,6 +159,9 @@ public class SystemManager {
                 System.out.println("You input an invalid choice, please enter a choice from 1-3.");
             }
         }
+    }
+    private String safeReadLine() {
+        return scanner.hasNextLine() ? scanner.nextLine() : null;
     }
 
     private void policyMakerMenu() {
@@ -190,20 +196,97 @@ public class SystemManager {
             System.out.println("3. Delete User");
             System.out.println("4. Back");
             System.out.println("Please select an option (1-4)");
-
+    
             String opt = scanner.nextLine();
-
-            if (opt.equals("1")) {
-                System.out.println("[TODO] Creating new user...");
-            } else if (opt.equals("2")) {
-                System.out.println("[TODO] Managing user...");
-            } else if (opt.equals("3")) {
-                System.out.println("[TODO] Deleting user...");
-            } else if (opt.equals("4")) {
-                back = true;
-            } else {
-                System.out.println("Invalid input, please choose an option from 1-4");
+    
+            switch (opt) {
+                case "1" -> {
+                    while (true) {
+                        System.out.print("Enter username: ");
+                        String username = scanner.nextLine();
+                        if (userManager.getUser(username) != null) {
+                            System.out.println("User already exists. Please enter a different username.");
+                        } else {
+                            System.out.print("Enter password: ");
+                            String password = scanner.nextLine();
+                            System.out.print("Enter role (Scientist, Space Agency Representative, Policymaker, Administrator): ");
+                            String role = scanner.nextLine();
+                            userManager.createUser(username, password, role);
+                            break;
+                        }
+                    }
+                }
+                case "2" -> {
+                    System.out.println("\n--- Current Users ---");
+                    userManager.printAllUsers();
+                
+                    while (true) {
+                        System.out.println("\n-----------------------------");
+                        System.out.println(" What would you like to do?");
+                        System.out.println("-----------------------------");
+                        System.out.println("  [1] Manage an existing user");
+                        System.out.println("  [2] Create a new user");
+                        System.out.println("  [3] Delete a user");
+                        System.out.println("  [4] Return to the Administrator Menu");
+                        System.out.println("-----------------------------");
+                        System.out.print("Select an option (1-4): ");
+                        String subOpt = scanner.nextLine();
+                
+                        if (subOpt.equals("1")) {
+                            System.out.print("Enter current username to manage: ");
+                            String oldUsername = scanner.nextLine();
+                
+                            // Check if user exists
+                            if (userManager.getUser(oldUsername) == null) {
+                                System.out.println("User not detected");
+                                continue; // loop back to menu
+                            }
+                
+                            System.out.print("Enter new username: ");
+                            String newUsername = scanner.nextLine();
+                            System.out.print("Enter new password: ");
+                            String newPassword = scanner.nextLine();
+                            userManager.updateUser(oldUsername, newUsername, newPassword);
+                            break;
+                        } else if (subOpt.equals("2")) {
+                            while (true) {
+                                System.out.print("Enter username: ");
+                                String username = scanner.nextLine();
+                                if (userManager.getUser(username) != null) {
+                                    System.out.println("User already exists. Please enter a different username.");
+                                } else {
+                                    System.out.print("Enter password: ");
+                                    String password = scanner.nextLine();
+                                    System.out.print("Enter role (Scientist, Space Agency Representative, Policymaker, Administrator): ");
+                                    String role = scanner.nextLine();
+                                    userManager.createUser(username, password, role);
+                                    break;
+                                }
+                            }
+                            break;
+                        } else if (subOpt.equals("3")) {
+                            System.out.print("Enter username to delete: ");
+                            String usernameToDelete = scanner.nextLine();
+                            userManager.deleteUser(usernameToDelete);
+                            break;
+                        } else if (subOpt.equals("4")) {
+                            System.out.println("Returning to Administrator menu...");
+                            break;
+                        } else {
+                            System.out.println("There is no option for your input");
+                        }
+                    }
+                }
+                case "3" -> {
+                    userManager.printAllUsers();
+                    System.out.print("Enter the username of the user to delete: ");
+                    String usernameToDelete = scanner.nextLine();
+                    userManager.deleteUser(usernameToDelete);
+                }
+                case "4" -> back = true;
+                default -> System.out.println("Invalid input, please choose an option from 1-4");
             }
         }
     }
+    
 }

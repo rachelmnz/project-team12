@@ -14,6 +14,13 @@ public class RunSimulation {
         List<SpaceObject> spaceObjects = FileHandler.loadSpaceObjects("rso_metrics.csv");
         TrackingSystem tracker = new TrackingSystem(spaceObjects);
 
+        // Adding test debris object that matches ImpactAnalysis filter
+        tracker.addSpaceObject(new Debris(
+            "T123", "TestDebris", "USA", "LEO",
+            2010, "KSC", 45.0, 47.0, "abc123",
+            500, 2
+        ));
+
         // Delegate to SystemManager
         SystemManager manager = new SystemManager(tracker, scanner);
         manager.startSimulation();
