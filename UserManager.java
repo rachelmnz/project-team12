@@ -1,14 +1,22 @@
 import java.util.*;
+import java.io.*;
 
 public class UserManager {
     private final Map<String, User> users = new HashMap<>();
+    private final String csvFile = "users.csv";
+
+    public UserManager() {
+        loadUsersFromCSV();
+    }
 
     public boolean createUser(String username, String password, String role) {
         if (users.containsKey(username)) {
             System.out.println("Username already exists.");
             return false;
         }
-        users.put(username, new User(username, password, role.toUpperCase()));
+        User user = new User(username, password, role.toUpperCase());
+        users.put(username, user);
+        saveUsersToCSV();
         System.out.println("User created successfully.");
         return true;
     }
@@ -43,6 +51,7 @@ public class UserManager {
         }
         users.remove(oldUsername);
         users.put(newUsername, new User(newUsername, newPassword, user.getRole()));
+        saveUsersToCSV();
         System.out.println("User updated successfully.");
         return true;
     }
@@ -50,11 +59,44 @@ public class UserManager {
     public boolean deleteUser(String username) {
         if (users.containsKey(username)) {
             users.remove(username);
+            saveUsersToCSV();
             System.out.println("User deleted successfully.");
             return true;
         } else {
             System.out.println("User not found.");
             return false;
+        }
+    }
+
+    private void loadUsersFromCSV() {
+        File file = new File(csvFile);
+        if (!file.exists()) return;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(csvFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 3) {
+                    String username = parts[0].trim();
+                    String password = parts[1].trim();
+                    String role = parts[2].trim();
+                    users.put(username, new User(username, password, role));
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to load users from CSV.");
+            e.printStackTrace();
+        }
+    }
+
+    private void saveUsersToCSV() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(csvFile))) {
+            for (User user : users.values()) {
+                writer.printf("%s,%s,%s\n", user.getUsername(), user.getPassword(), user.getRole());
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to save users to CSV.");
+            e.printStackTrace();
         }
     }
 
