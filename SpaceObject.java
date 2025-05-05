@@ -15,6 +15,21 @@ public class SpaceObject {
     protected String geohash;
     protected int daysOld;
     protected int conjunctionCount;
+/**
+* Constructs a {@code SpaceObject} with the specified parameters.
+*
+* @param recordId          unique record identifier
+* @param satelliteName     name of the satellite
+* @param country           country of origin
+* @param orbitType         type of orbit
+* @param launchYear        year of launch
+* @param launchSite        site of launch
+* @param longitude         current longitude
+* @param avgLongitude      average longitude
+* @param geohash           location encoded as geohash
+* @param daysOld           age of the object in days
+* @param conjunctionCount  number of conjunction events
+*/
 
     public SpaceObject(String recordId, String satelliteName, String country, String orbitType,
                        int launchYear, String launchSite, double longitude, double avgLongitude,
@@ -31,6 +46,9 @@ public class SpaceObject {
         this.daysOld = daysOld;
         this.conjunctionCount = conjunctionCount;
     }
+/**
+* Displays formatted details of the space object.
+*/
 
     public void displayInfo() {
         System.out.printf(
