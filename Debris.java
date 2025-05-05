@@ -1,3 +1,8 @@
+/**
+ * The debris class represents a spece object that is a debris, 
+ * This is initializing the debirs object with the parameters and objectifying it
+ */
+
 public class Debris extends SpaceObject {
 
     public Debris(String recordId, String satelliteName, String country, String orbitType,
