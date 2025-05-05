@@ -1,10 +1,25 @@
 import java.util.Scanner;
 import java.util.List; 
 
+/**
+ * Represents a Scientist user who can track space objects and assess orbit status.
+ * Extends the {@code User} class.
+ */
 class Scientist extends User {
+/**
+* Constructs a Scientist with a scanner and tracking system.
+*
+* @param scanner the scanner for user input
+* @param tracker the tracking system with space object data
+*/
     public Scientist(Scanner scanner, TrackingSystem tracker) {
         super(scanner, tracker);
     }
+
+ /**
+* Displays the main menu for the Scientist, allowing the user to
+* track objects or assess orbit status.
+*/
 
     @Override
     public void displayMenu() {
@@ -25,6 +40,9 @@ class Scientist extends User {
             }
         }
     }
+/**
+* Displays a menu for tracking specific types of space objects.
+*/
 
     private void trackObjectsMenu() {
         boolean back = false;
@@ -42,6 +60,11 @@ class Scientist extends User {
             }
         }
     }
+/**
+* Displays information for space objects of the given type.
+*
+* @param type the type of object to display (e.g., "DEBRIS")
+*/
 
     private void displayObjects(String type) {
         List<SpaceObject> objs = tracker.getObjectsByType(type);
@@ -50,7 +73,10 @@ class Scientist extends User {
             obj.displayInfo();
         }
     }
-
+/**
+* Displays a menu for assessing orbit status, including LEO tracking and
+* debris evaluation.
+*/
     private void assessOrbitMenu() {
         boolean back = false;
         while (!back) {
