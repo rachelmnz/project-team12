@@ -6,21 +6,42 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 
+/**
+ * Manages the system's user login, authentication, and role-based menus.
+ * Handles input for Scientists, Space Agency Representatives, Policymakers, and Administrators.
+ */
+
 public class SystemManager {
     private final TrackingSystem tracker;
     private final Scanner scanner;
     private final UserManager userManager;
     private UserManager.User currentUser;
 
+/**
+* Constructs a SystemManager with the given tracker, scanner, and user manager.
+*
+* @param tracker the space object tracking system
+* @param scanner scanner for user input
+* @param userManager handles user authentication and creation
+*/
+
     public SystemManager(TrackingSystem tracker, Scanner scanner, UserManager userManager) {
         this.tracker = tracker;
         this.scanner = scanner;
         this.userManager = userManager;
     }
+/**
+* Sets the currently logged-in user.
+*
+* @param user the user who has successfully logged in
+*/
 
     public void setCurrentUser(UserManager.User user) {
         this.currentUser = user;
     }
+/**
+* Displays the login menu and routes users to role-specific menus.
+*/
 
     public void loginMenu() {
         boolean running = true;
@@ -75,7 +96,9 @@ public class SystemManager {
             }
         }
     }
-
+/**
+* Displays menu options specific to users with the Scientist role.
+*/
     private void scientistMenu() {
         LoggerUtil.log("User '" + currentUser.getUsername() + "' entered Scientist menu");
         if (!currentUser.getRole().equalsIgnoreCase("Scientist")) {
@@ -166,6 +189,10 @@ public class SystemManager {
         }
     }
 
+/**
+* Displays menu options specific to Space Agency Representatives.
+*/
+
     private void spaceAgencyMenu() {
         LoggerUtil.log("User '" + currentUser.getUsername() + "' entered Space Agency menu");
         if (!currentUser.getRole().equalsIgnoreCase("Space Agency Representative")) {
@@ -205,6 +232,10 @@ public class SystemManager {
         return scanner.hasNextLine() ? scanner.nextLine() : null;
     }
 
+/**
+* Displays the menu for Policymakers to review reports and assess mission risks.
+*/
+
     private void policyMakerMenu() {
         LoggerUtil.log("User '" + currentUser.getUsername() + "' entered Policy Maker menu");
         if (!currentUser.getRole().equalsIgnoreCase("Policymaker")) {
@@ -232,7 +263,10 @@ public class SystemManager {
             }
         }
     }
-
+    
+/**
+* Displays the menu for Administrators to manage users and view logs.
+*/
     private void administratorMenu() {
         LoggerUtil.log("User '" + currentUser.getUsername() + "' entered Administrator menu");
         if (!currentUser.getRole().equalsIgnoreCase("Administrator")) {
@@ -383,11 +417,23 @@ public class SystemManager {
             }
         }
     }
+/**
+* Extracts the username from a log entry line.
+*
+* @param logLine the log line containing a username
+* @return the extracted username or "Unknown"
+*/
         private static String extractUsername(String logLine) {
             int start = logLine.indexOf("User '") + 6;
             int end = logLine.indexOf("' logged in");
             return (start >= 6 && end > start) ? logLine.substring(start, end) : "Unknown";
         }
+/**
+* Prints the usage count from a user role map.
+*
+* @param title the section title
+* @param map   the username-to-count map
+*/
         private static void printLogCount(String title, Map<String, Integer> map) {
             System.out.println("\n-- " + title + " --");
             if (map.isEmpty()) {
