@@ -22,6 +22,12 @@ public class DebrisDensityAnalysis implements Analyzable {
         this.scanner = scanner;
     }
 
+/**
+*Promting the user to input a longitude range and will display all space objects
+*their longitudes fall within the range, along with a count
+*Handles invalid inputs
+*/
+
     @Override
     public void analyze() {
         try {
