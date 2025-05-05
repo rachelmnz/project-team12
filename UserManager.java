@@ -1,10 +1,18 @@
 import java.util.*;
 import java.io.*;
 
+/**
+ * This manages user accounts including creation, authentication, updates, deletion,
+ * and persistence through a CSV file.
+ */
+
 public class UserManager {
     private final Map<String, User> users = new HashMap<>();
     private final String csvFile = "users.csv";
-
+/**
+* Constructs a UserManager and loads users from a CSV file.
+* If no users are found, a default admin account is created.
+*/
     public UserManager() {
         loadUsersFromCSV();
         if (users.isEmpty()) {
@@ -12,6 +20,14 @@ public class UserManager {
             createUser("admin", "admin123", "Administrator");
         }
     }
+/**
+* Creates a new user if the username does not already exist.
+*
+* @param username the new user's username
+* @param password the new user's password
+* @param role     the role of the new user
+* @return true if user is successfully created, false otherwise
+*/
 
     public boolean createUser(String username, String password, String role) {
         if (users.containsKey(username)) {
@@ -24,6 +40,13 @@ public class UserManager {
         System.out.println("User created successfully.");
         return true;
     }
+/**
+* Authenticates a user by verifying username and password.
+*
+* @param username the input username
+* @param password the input password
+* @return the User if credentials are valid, null otherwise
+*/
 
     public User authenticate(String username, String password) {
         User user = users.get(username);
@@ -32,10 +55,19 @@ public class UserManager {
         }
         return null;
     }
-
+/**
+* Retrieves a user by their username.
+*
+* @param username the username to search
+* @return the User if found, null otherwise
+*/
     public User getUser(String username) {
         return users.get(username);
     }
+
+/**
+* Prints all registered users to the console.
+*/
 
     public void printAllUsers() {
         if (users.isEmpty()) {
@@ -46,7 +78,15 @@ public class UserManager {
         users.values().forEach(user ->
             System.out.printf("Username: %s | Role: %s\n", user.getUsername(), user.getRole()));
     }
-
+    
+/**
+* Updates an existing user's username and password.
+*
+* @param oldUsername the current username
+* @param newUsername the new username
+* @param newPassword the new password
+* @return true if update was successful, false if user not found
+*/
     public boolean updateUser(String oldUsername, String newUsername, String newPassword) {
         User user = users.get(oldUsername);
         if (user == null) {
@@ -60,6 +100,13 @@ public class UserManager {
         return true;
     }
 
+/**
+* Deletes a user by username.
+*
+* @param username the username of the user to delete
+* @return true if deleted successfully, false if user not found
+*/
+
     public boolean deleteUser(String username) {
         if (users.containsKey(username)) {
             users.remove(username);
@@ -72,6 +119,9 @@ public class UserManager {
         }
     }
 
+/**
+* Loads users from a CSV file into the users map.
+*/
     private void loadUsersFromCSV() {
         File file = new File(csvFile);
         if (!file.exists()) return;
@@ -93,6 +143,9 @@ public class UserManager {
         }
     }
 
+/**
+* Saves all users to the CSV file.
+*/
     private void saveUsersToCSV() {
         try (PrintWriter writer = new PrintWriter(new FileWriter(csvFile))) {
             for (User user : users.values()) {
@@ -104,25 +157,35 @@ public class UserManager {
         }
     }
 
+/**
+* Represents a user with a username, password, and role.
+*/
     public static class User {
         private final String username;
         private final String password;
         private final String role;
 
+/**
+* Constructs a User object.
+*
+* @param username the username
+* @param password the password
+* @param role     the role (e.g., Scientist, Administrator)
+*/
         public User(String username, String password, String role) {
             this.username = username;
             this.password = password;
             this.role = role;
         }
-
+/** @retun the username*/
         public String getUsername() {
             return username;
         }
-
+/**@return the password*/
         public String getPassword() {
             return password;
         }
-
+/**@return the role*/
         public String getRole() {
             return role;
         }
