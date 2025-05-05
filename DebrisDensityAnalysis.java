@@ -1,32 +1,14 @@
 import java.util.List;
 import java.util.Scanner;
 
-/**
-*This Handles density analysis of space debrris objects that are based on
-*Longitude range.
-*Implements the Analyzable interface to support the consistent analysis behavior
-*/ 
-
 public class DebrisDensityAnalysis implements Analyzable {
     private final TrackingSystem tracker;
     private final Scanner scanner;
-/**
-*Constructs the DebrisDensityAnalysis object witht he tracking system and
-*a scanner
-*@param trakcer Tracking System contains all space objects.
-*@param scanner it is used for user input
-*/
 
     public DebrisDensityAnalysis(TrackingSystem tracker, Scanner scanner) {
         this.tracker = tracker;
         this.scanner = scanner;
     }
-
-/**
-*Promting the user to input a longitude range and will display all space objects
-*their longitudes fall within the range, along with a count
-*Handles invalid inputs
-*/
 
     @Override
     public void analyze() {

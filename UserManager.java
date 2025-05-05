@@ -7,6 +7,10 @@ public class UserManager {
 
     public UserManager() {
         loadUsersFromCSV();
+        if (users.isEmpty()) {
+            System.out.println("No users found. Creating default admin account.");
+            createUser("admin", "admin123", "Administrator");
+        }
     }
 
     public boolean createUser(String username, String password, String role) {

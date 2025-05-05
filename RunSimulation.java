@@ -14,19 +14,19 @@ public class RunSimulation {
         List<SpaceObject> spaceObjects = FileHandler.loadSpaceObjects("rso_metrics.csv");
         TrackingSystem tracker = new TrackingSystem(spaceObjects);
 
-        // Adding test debris object that matches ImpactAnalysis filter
+        // Add test debris object for analysis demo
         tracker.addSpaceObject(new Debris(
             "T123", "TestDebris", "USA", "LEO",
             2010, "KSC", 45.0, 47.0, "abc123",
             500, 2
         ));
 
-        // Delegate to SystemManager
-        SystemManager manager = new SystemManager(tracker, scanner);
-        manager.startSimulation();
+        UserManager userManager = new UserManager();
+        SystemManager manager = new SystemManager(tracker, scanner, userManager);
+        manager.loginMenu();
 
-        // Exit message
-        System.out.println("You are exiting the program. Have a good day!");
-        scanner.close();
+        // Exit message and log save
+        LoggerUtil.log("Program terminated.");
+        LoggerUtil.saveLatestLog();
     }
 }

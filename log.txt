@@ -1,0 +1,9 @@
+[2025-05-04T21:40:04.791102] Main menu displayed
+[2025-05-04T21:40:12.923361200] Main menu displayed
+[2025-05-04T21:40:34.629920900] Main menu displayed
+[2025-05-04T21:40:45.072446400] User 'ed' entered Scientist menu
+[2025-05-04T21:45:24.489668700] Main menu displayed
+[2025-05-04T21:45:26.107684600] Program terminated.
+[2025-05-04 21:45:30] Main menu displayed
+[2025-05-04 21:45:38] Main menu displayed
+[2025-05-04 22:01:05] Program terminated.

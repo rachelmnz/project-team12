@@ -73,5 +73,35 @@ public class AllTests {
         DebrisDensityAnalysis analysis = new DebrisDensityAnalysis();
         assertDoesNotThrow(analysis::generateDensityReport);
     }
+    // ---Login Tests---
+    @Test
+    void testLoginSuccess() {
+        UserManager userManager = new UserManager();
+        userManager.createUser("test", "pass", "Scientist");
+
+        UserManager.User user = userManager.authenticate("test", "pass");
+
+        assertNotNull(user);
+        assertEquals("Scientist", user.getRole());
+    }
+    @Test
+    void testLoginInvalidPassword() {
+        UserManager userManager = new UserManager();
+        userManager.createUser("test", "pass", "Scientist");
+
+        UserManager.User user = userManager.authenticate("test", "wrong");
+
+        assertNull(user);
+    }
+      @Test
+    void testLoginNonexistentUser() {
+        UserManager userManager = new UserManager();
+        UserManager.User user = userManager.authenticate("ghost", "none");
+
+        assertNull(user);
+    }
+  
+
+
 }
 */

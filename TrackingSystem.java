@@ -132,7 +132,7 @@ public class TrackingSystem {
                         obj.getLongitude() == 0.0 &&
                         obj.getDaysOld() > 15000 &&
                         obj.getConjunctionCount() == 0;
-    
+                
                 String status;
                 if (stillInOrbit) {
                     status = "Still in Orbit";
@@ -161,6 +161,46 @@ public class TrackingSystem {
                         ", Orbit Type: " + obj.getOrbitType() +
                         ", Drift: " + drift);
             }
+        }
+    }
+    public void writeUpdatedDebrisTrackingReport(String filename) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+            writer.println("Updated Debris Tracking Report");
+            writer.println("============================\n");
+
+            for (SpaceObject obj : allObjects) {
+                if (!(obj instanceof Debris)) continue;
+
+                boolean stillInOrbit = obj.getOrbitType() != null && !obj.getOrbitType().equalsIgnoreCase("UNKNOWN") &&
+                                       obj.getLongitude() != 0.0 &&
+                                       obj.getDaysOld() < 15000 &&
+                                       obj.getConjunctionCount() >= 1;
+
+                boolean exitedOrbit = (obj.getOrbitType() == null || obj.getOrbitType().equalsIgnoreCase("UNKNOWN")) &&
+                                      obj.getLongitude() == 0.0 &&
+                                      obj.getDaysOld() > 15000 &&
+                                      obj.getConjunctionCount() == 0;
+
+                String status = stillInOrbit ? "Still in Orbit" : exitedOrbit ? "Exited Orbit" : "Status Uncertain";
+
+                double drift = Math.abs(obj.getLongitude() - obj.getAvgLongitude());
+                String risk = drift > 50 ? "High" : drift > 10 ? "Moderate" : "Low";
+
+                writer.printf("ID: %s\n", obj.getRecordId());
+                writer.printf("Name: %s\n", obj.getSatelliteName());
+                writer.printf("Orbit Type: %s\n", obj.getOrbitType());
+                writer.printf("Longitude: %.2f\n", obj.getLongitude());
+                writer.printf("Avg Longitude: %.2f\n", obj.getAvgLongitude());
+                writer.printf("Drift: %.2f\n", drift);
+                writer.printf("Risk: %s\n", risk);
+                writer.printf("Status: %s\n", status);
+                writer.println("----------------------------");
+            }
+
+            System.out.println("TXT debris tracking report saved to: " + filename);
+        } catch (IOException e) {
+            System.err.println("Failed to write updated debris tracking TXT report");
+            e.printStackTrace();
         }
     }
 
@@ -196,7 +236,7 @@ public class TrackingSystem {
                         obj.getRecordId(), obj.getSatelliteName(), obj.getCountry(), obj.getOrbitType(),
                         obj.getLaunchYear(), obj.getLaunchSite(), obj.getLongitude(), obj.getAvgLongitude(),
                         obj.getGeohash(), obj.getDaysOld(), obj.getConjunctionCount(),
-                        stillInOrbit, riskLevel);
+                        stillInOrbit, exitedOrbit, riskLevel);
             }
     
             System.out.println("CSV with orbit assessments saved to: " + filename);

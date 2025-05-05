@@ -1,51 +1,87 @@
 import java.util.List;
 import java.util.Scanner;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.io.IOException;
+import java.util.Map;
+import java.util.HashMap;
 
 public class SystemManager {
     private final TrackingSystem tracker;
     private final Scanner scanner;
-    private final UserManager userManager = new UserManager();
+    private final UserManager userManager;
+    private UserManager.User currentUser;
 
-
-    public SystemManager(TrackingSystem tracker, Scanner scanner) {
+    public SystemManager(TrackingSystem tracker, Scanner scanner, UserManager userManager) {
         this.tracker = tracker;
         this.scanner = scanner;
+        this.userManager = userManager;
     }
 
-    public void startSimulation() {
-        boolean exitProgram = false;
+    public void setCurrentUser(UserManager.User user) {
+        this.currentUser = user;
+    }
 
-        while (!exitProgram) {
-            System.out.println("\n-----Main Menu-----");
-            System.out.println("1. Scientist");
-            System.out.println("2. Space Agency Representative");
-            System.out.println("3. Policy Maker");
-            System.out.println("4. Administrator");
-            System.out.println("5. Exit");
-            System.out.println("Welcome, PLease select your user type (1-5): ");
+    public void loginMenu() {
+        boolean running = true;
+        while (running) {
+            LoggerUtil.log("Main menu displayed");
+            System.out.println("\n===== Main Menu =====");
+            System.out.println("1. Login as Scientist");
+            System.out.println("2. Login as Space Agency Representative");
+            System.out.println("3. Login as Policy Maker");
+            System.out.println("4. Login as Administrator");
+            System.out.println("5. Create New User");
+            System.out.println("6. Exit");
+            System.out.print("Choose an option (1-6): ");
 
             String input = scanner.nextLine();
-            String userType = input.toUpperCase();
 
-            if (userType.equals("EXIT") || userType.equals("5")) {
-                exitProgram = true;
-            } else if (userType.equals("1")) {
-                scientistMenu();
-            } else if (userType.equals("2")) {
-                spaceAgencyMenu();
-            } else if (userType.equals("3")) {
-                policyMakerMenu();
-                System.out.println("We are working on the policy maker menu");
-            } else if (userType.equals("4")) {
-                administratorMenu();
-                System.out.println("We are currently working on the Administrator menu");
-            } else {
-                System.out.println("You have input an invalid number pleace chose a number from 1-5");
+            switch (input) {
+                case "1", "2", "3", "4" -> {
+                    System.out.print("Enter username: ");
+                    String username = scanner.nextLine();
+                    System.out.print("Enter password: ");
+                    String password = scanner.nextLine();
+
+                    UserManager.User user = userManager.authenticate(username, password);
+                    if (user == null) {
+                        System.out.println("Invalid credentials. Access denied.");
+                    } else {
+                        setCurrentUser(user);
+                        switch (input) {
+                            case "1" -> scientistMenu();
+                            case "2" -> spaceAgencyMenu();
+                            case "3" -> policyMakerMenu();
+                            case "4" -> administratorMenu();
+                        }
+                    }
+                }
+                case "5" -> {
+                    System.out.print("Enter new username: ");
+                    String username = scanner.nextLine();
+                    System.out.print("Enter new password: ");
+                    String password = scanner.nextLine();
+                    System.out.print("Enter role (Scientist, Space Agency Representative, Policymaker, Administrator): ");
+                    String role = scanner.nextLine();
+                    userManager.createUser(username, password, role);
+                }
+                case "EXIT", "exit", "Exit", "6" -> {
+                    running = false;
+                    System.out.println("You are exiting the program. Have a good day!");
+                    scanner.close();
+                }
+                default -> System.out.println("Invalid choice. Please select a valid option.");
             }
         }
     }
 
     private void scientistMenu() {
+        LoggerUtil.log("User '" + currentUser.getUsername() + "' entered Scientist menu");
+        if (!currentUser.getRole().equalsIgnoreCase("Scientist")) {
+            System.out.println("Access denied. You are not authorized to access this menu.");
+            return;
+        }
         boolean back = false;
         while (!back) {
             System.out.println("\n ----- Scientist Menu -----");
@@ -131,6 +167,11 @@ public class SystemManager {
     }
 
     private void spaceAgencyMenu() {
+        LoggerUtil.log("User '" + currentUser.getUsername() + "' entered Space Agency menu");
+        if (!currentUser.getRole().equalsIgnoreCase("Space Agency Representative")) {
+            System.out.println("Access denied. You are not authorized to access this menu.");
+            return;
+        }
         AnalysisContext context = new AnalysisContext();
         boolean back = false;
         while (!back) {
@@ -165,6 +206,11 @@ public class SystemManager {
     }
 
     private void policyMakerMenu() {
+        LoggerUtil.log("User '" + currentUser.getUsername() + "' entered Policy Maker menu");
+        if (!currentUser.getRole().equalsIgnoreCase("Policymaker")) {
+            System.out.println("Access denied. You are not authorized to access this menu.");
+            return;
+        }
         boolean back = false;
         while (!back) {
             System.out.println("\n ----- Policymaker Menu -----");
@@ -188,13 +234,19 @@ public class SystemManager {
     }
 
     private void administratorMenu() {
+        LoggerUtil.log("User '" + currentUser.getUsername() + "' entered Administrator menu");
+        if (!currentUser.getRole().equalsIgnoreCase("Administrator")) {
+            System.out.println("Access denied. You are not authorized to access this menu.");
+            return;
+        }
         boolean back = false;
         while (!back) {
             System.out.println("\n ----- Administrator Menu -----");
             System.out.println("1. Create User");
             System.out.println("2. Manage Users");
             System.out.println("3. Delete User");
-            System.out.println("4. Back");
+            System.out.println("4. View Login Logs");
+            System.out.println("5. Back");
             System.out.println("Please select an option (1-4)");
     
             String opt = scanner.nextLine();
@@ -283,10 +335,65 @@ public class SystemManager {
                     String usernameToDelete = scanner.nextLine();
                     userManager.deleteUser(usernameToDelete);
                 }
-                case "4" -> back = true;
-                default -> System.out.println("Invalid input, please choose an option from 1-4");
+                case "4" -> {
+                    System.out.println("\n--- User Login Log ---");
+                    try {
+                        List<String> lines = Files.readAllLines(Paths.get("log.txt"));
+                        Map<String, Integer> scientistCount = new HashMap<>();
+                        Map<String, Integer> agencyCount = new HashMap<>();
+                        Map<String, Integer> policymakerCount = new HashMap<>();
+                        Map<String, Integer> adminCount = new HashMap<>();
+                        Map<String, Integer> mainMenuCount = new HashMap<>();
+
+                        for (String line : lines) {
+                            if (line.contains("logged in as Scientist")) {
+                                String user = extractUsername(line);
+                                scientistCount.put(user, scientistCount.getOrDefault(user, 0) + 1);
+                            } else if (line.contains("logged in as Space Agency Representative")) {
+                                String user = extractUsername(line);
+                                agencyCount.put(user, agencyCount.getOrDefault(user, 0) + 1);
+                            } else if (line.contains("logged in as Policy Maker") || line.contains("logged in as Policymaker")) {
+                                String user = extractUsername(line);
+                                policymakerCount.put(user, policymakerCount.getOrDefault(user, 0) + 1);
+                            } else if (line.contains("logged in as Administrator")) {
+                                String user = extractUsername(line);
+                                adminCount.put(user, adminCount.getOrDefault(user, 0) + 1);
+                            } else if (line.contains("Main menu displayed")) {
+                                String user = currentUser != null ? currentUser.getUsername() : "Unknown";
+                                mainMenuCount.put(user, mainMenuCount.getOrDefault(user, 0) + 1);
+                            }
+                        }
+
+                        printLogCount("Scientist", scientistCount);
+                        printLogCount("Space Agency Representative", agencyCount);
+                        printLogCount("Policymaker", policymakerCount);
+                        printLogCount("Administrator", adminCount);
+                        printLogCount("Main Menu Visits", mainMenuCount);
+
+                    } catch (IOException e) {
+                        System.out.println("Failed to read log file.");
+                        e.printStackTrace();
+                    }
+                }
+                case "5" -> {
+                    LoggerUtil.log("User '" + currentUser.getUsername() + "' returned to main menu from Administrator");
+                    back = true;
+                }
+                default -> System.out.println("Invalid input, please choose an option from 1-5");
             }
         }
     }
-    
+        private static String extractUsername(String logLine) {
+            int start = logLine.indexOf("User '") + 6;
+            int end = logLine.indexOf("' logged in");
+            return (start >= 6 && end > start) ? logLine.substring(start, end) : "Unknown";
+        }
+        private static void printLogCount(String title, Map<String, Integer> map) {
+            System.out.println("\n-- " + title + " --");
+            if (map.isEmpty()) {
+            System.out.println("No records found.");
+            } else {
+                map.forEach((user, count) -> System.out.println(user + ": " + count));
+        }
+    }   
 }
