@@ -1,6 +1,12 @@
 import java.util.List;
 import java.util.Scanner;
 
+/**
+*This Handles density analysis of space debrris objects that are based on
+*Longitude range.
+*Implements the Analyzable interface to support the consistent analysis behavior
+*/ 
+
 public class DebrisDensityAnalysis implements Analyzable {
     private final TrackingSystem tracker;
     private final Scanner scanner;
