@@ -10,6 +10,12 @@ import java.util.Scanner;
 public class DebrisDensityAnalysis implements Analyzable {
     private final TrackingSystem tracker;
     private final Scanner scanner;
+/**
+*Constructs the DebrisDensityAnalysis object witht he tracking system and
+*a scanner
+*@param trakcer Tracking System contains all space objects.
+*@param scanner it is used for user input
+*/
 
     public DebrisDensityAnalysis(TrackingSystem tracker, Scanner scanner) {
         this.tracker = tracker;
