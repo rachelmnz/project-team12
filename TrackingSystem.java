@@ -18,42 +18,26 @@ import java.io.IOException;
  */
 public class TrackingSystem {
 
-    private List<SpaceObject> allObjects;
+    private Map<String, SpaceObject> allObjects;
 
-    /**
-     * Constructs a {@code TrackingSystem} with a predefined list of space objects.
-     *
-     * @param objects the list of {@code SpaceObject} instances to manage
-     */
-    public TrackingSystem(List<SpaceObject> objects) {
-        this.allObjects = objects;
+    public TrackingSystem(Map<String, SpaceObject> objects) {
+        this.allObjects = new HashMap<>(objects);
     }
-
-    /**
-     * Constructs an empty {@code TrackingSystem}.
-     */
+    
     public TrackingSystem() {
-        allObjects = new ArrayList<>();
+        allObjects = new HashMap<>();
     }
+    
 
-    /**
-     * Returns the list of all space objects managed by the tracking system.
-     *
-     * @return the list of {@code SpaceObject} instances
-     */
     public List<SpaceObject> getAllObjects() {
-        return allObjects;
-    }
+        return new ArrayList<>(allObjects.values());
+    }    
 
-    /**
-     * Adds a new space object to the tracking system.
-     *
-     * @param obj the {@code SpaceObject} to add
-     */
+
     public void addSpaceObject(SpaceObject obj) {
-        allObjects.add(obj);
+        allObjects.put(obj.getRecordId(), obj);
     }
-
+    
     /**
      * Retrieves a list of space objects filtered by their type.
      *
@@ -62,7 +46,7 @@ public class TrackingSystem {
      */
     public List<SpaceObject> getObjectsByType(String type) {
         List<SpaceObject> result = new ArrayList<>();
-        for (SpaceObject obj : allObjects) {
+        for (SpaceObject obj : allObjects.values()){
             if (obj.getObjectType() != null && obj.getObjectType().equalsIgnoreCase(type.trim())) {
                 result.add(obj);
             }
@@ -78,7 +62,7 @@ public class TrackingSystem {
      */
     public List<SpaceObject> getObjectsByOrbit(String orbitType) {
         List<SpaceObject> result = new ArrayList<>();
-        for (SpaceObject obj : allObjects) {
+        for (SpaceObject obj : allObjects.values()) {
             if (obj.getOrbitType() != null && obj.getOrbitType().equalsIgnoreCase(orbitType)) {
                 result.add(obj);
             }
@@ -119,7 +103,7 @@ public class TrackingSystem {
     public void assessDebrisInOrbit() {
         System.out.println("\n--- Debris Orbital Assessment ---");
     
-        for (SpaceObject obj : allObjects) {
+        for (SpaceObject obj : allObjects.values()) {
             if (obj instanceof Debris) {
                 boolean stillInOrbit =
                         obj.getOrbitType() != null && !obj.getOrbitType().equalsIgnoreCase("UNKNOWN") &&
@@ -168,7 +152,7 @@ public class TrackingSystem {
             writer.println("Updated Debris Tracking Report");
             writer.println("============================\n");
 
-            for (SpaceObject obj : allObjects) {
+            for (SpaceObject obj : allObjects.values()) {
                 if (!(obj instanceof Debris)) continue;
 
                 boolean stillInOrbit = obj.getOrbitType() != null && !obj.getOrbitType().equalsIgnoreCase("UNKNOWN") &&
@@ -215,7 +199,7 @@ public class TrackingSystem {
             // Header row
             writer.println("record_id,satellite_name,country,orbit_type,launch_year,launch_site,longitude,avg_longitude,geohash,days_old,conjunction_count,still_in_orbit,risk_level");
     
-            for (SpaceObject obj : allObjects) {
+            for (SpaceObject obj : allObjects.values()) {
                 if (!(obj instanceof Debris)) continue;
     
                 boolean stillInOrbit = obj.getOrbitType() != null && !obj.getOrbitType().equalsIgnoreCase("UNKNOWN") &&
@@ -261,7 +245,7 @@ public class TrackingSystem {
             writer.println("Exited Debris Report");
             writer.println("====================\n");
     
-            for (SpaceObject obj : allObjects) {
+            for (SpaceObject obj : allObjects.values()) {
                 if (!(obj instanceof Debris)) continue;
     
                 boolean stillInOrbit = obj.getOrbitType() != null && !obj.getOrbitType().equalsIgnoreCase("UNKNOWN") &&
