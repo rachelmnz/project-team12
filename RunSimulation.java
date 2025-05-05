@@ -1,4 +1,4 @@
-import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -17,7 +17,7 @@ public class RunSimulation {
 
     public static void main(String[] args) {
         // Load space object data from CSV
-        List<SpaceObject> spaceObjects = FileHandler.loadSpaceObjects("rso_metrics.csv");
+        Map<String, SpaceObject> spaceObjects = FileHandler.loadSpaceObjects("rso_metrics.csv");
         TrackingSystem tracker = new TrackingSystem(spaceObjects);
 
         // Add test debris object for analysis demo
