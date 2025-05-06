@@ -215,11 +215,13 @@ public class SystemManager {
                 System.out.println("Currently Analyzing the long term impact");
                 context.setStrategy(new ImpactAnalysis(tracker));
                 context.execute();
+                //---------------------------------------------------------------------
 
             } else if (selection.equals("2")) {
                 System.out.println("Currently generating the Density Reports");
                 context.setStrategy(new DebrisDensityAnalysis(tracker, scanner));
                 context.execute();
+                //----------------------------------------------------------------------
 
             } else if (selection.equals("3")) {
                 back = true;
