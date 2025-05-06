@@ -309,10 +309,10 @@ public class TrackingSystem {
     
           for(int i =0; i< allObjects.size(); i++){
             SpaceObject obj = allObjects.get(i);
-            double long = obj.getLongitude();
+            double longitude = obj.getLongitude();
     
-            if(long >= min && long <= max){
-              System.out.println("Record ID: " + obj.getID());
+            if(longitude >= min && longitude <= max){
+              System.out.println("Record ID: " + obj.getRecordId());
               System.out.println("Satellite Name: " + obj.getSatelliteName());
               System.out.println("Country: " + obj.getCountry());
               System.out.println("Orbit Type: " + obj.getOrbitType());
@@ -330,14 +330,13 @@ public class TrackingSystem {
     }
 
     private void analyzeLongTermImpact(){
-        List<SpaceObject> allObjects = tracker.getAllObjects();
     
         System.out.println("------- Long Term Impact Analysis -------");
         for(int i =0; i<allObjects.size(); i++){
           SpaceObject obj = allObjects.get(i);
     
-          if(obj.getOrbitTye().equalsIgnoreCase("LEO") && obj.getDaysOld()>200 && obj.getConjunctionCount()>0){
-             System.out.println("Record ID: " + obj.getRecordID());
+          if(obj.getOrbitType().equalsIgnoreCase("LEO") && obj.getDaysOld()>200 && obj.getConjunctionCount()>0){
+             System.out.println("Record ID: " + obj.getRecordId());
              System.out.println("Satellite Name: " + obj.getSatelliteName());
              System.out.println("Country: " + obj.getCountry());
              System.out.println("Orbit Type: " + obj.getOrbitType());
