@@ -1,5 +1,7 @@
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -26,68 +28,58 @@ public class FileHandler {
         List<SpaceObject> objects = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String headerLine = br.readLine(); // read header
+            if (headerLine == null) return objects;
+
+            String[] headers = headerLine.split(",", -1);
+            Map<String, Integer> headerMap = new HashMap<>();
+            for (int i = 0; i < headers.length; i++) {
+                headerMap.put(headers[i].trim().toLowerCase(), i); // lowercase for robustness
+            }
+
             String line;
-            br.readLine(); // skip header
             while ((line = br.readLine()) != null) {
-                String[] data = line.split(",", -1); // -1 to include trailing empty fields
+                String[] data = line.split(",", -1); // include empty trailing fields
 
-                if (data.length >= 20) {
-                    try {
-                        String recordId = data[0];
-                        String satelliteName = data[2];
-                        String country = data[3];
-                        String orbitType = data[4];
-                        String launchSite = data[7];
-                        double longitude = parseDoubleSafe(data[8]);
-                        double avgLongitude = parseDoubleSafe(data[9]);
-                        String geohash = data[10];
-                        int launchYear = parseIntSafe(data[6]);
-                        int daysOld = parseIntSafe(data[18]);
-                        int conjunctionCount = parseIntSafe(data[19]);
+                try {
+                    String recordId = getSafe(data, headerMap, "record_id");
+                    String satelliteName = getSafe(data, headerMap, "satellite_name");
+                    String country = getSafe(data, headerMap, "country");
+                    String orbitType = getSafe(data, headerMap, "approximate_orbit_type");
+                    String launchSite = getSafe(data, headerMap, "launch_site");
+                    double longitude = parseDoubleSafe(getSafe(data, headerMap, "longitude"));
+                    double avgLongitude = parseDoubleSafe(getSafe(data, headerMap, "avg_longitude"));
+                    String geohash = getSafe(data, headerMap, "geohash");
+                    int launchYear = parseIntSafe(getSafe(data, headerMap, "launch_year"));
+                    int daysOld = parseIntSafe(getSafe(data, headerMap, "days_old"));
+                    int conjunctionCount = parseIntSafe(getSafe(data, headerMap, "conjunction_count"));
 
-                        // Infer object type from satellite name
-                        String nameUpper = satelliteName.toUpperCase();
-                        String inferredType = "UNKNOWN";
-
-                        if (nameUpper.contains("DEB")) {
-                            inferredType = "DEBRIS";
-                        } else if (nameUpper.contains("R/B") || nameUpper.contains("ROCKET")) {
-                            inferredType = "ROCKET BODY";
-                        } else if (nameUpper.contains("SAT") || nameUpper.contains("STARLINK") || nameUpper.contains("PAYLOAD")) {
-                            inferredType = "PAYLOAD";
-                        }
-
-                        SpaceObject obj = null;
-
-                        switch (inferredType) {
-                            case "DEBRIS":
-                                obj = new Debris(recordId, satelliteName, country, orbitType, launchYear,
-                                        launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
-                                break;
-                            case "ROCKET BODY":
-                                obj = new RocketBody(recordId, satelliteName, country, orbitType, launchYear,
-                                        launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
-                                break;
-                            case "PAYLOAD":
-                                obj = new Payload(recordId, satelliteName, country, orbitType, launchYear,
-                                        launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
-                                break;
-                            case "UNKNOWN":
-                                obj = new UnknownObject(recordId, satelliteName, country, orbitType, launchYear,
-                                        launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
-                                break;
-                            default:
-                                break; // Should not reach here
-                        }
-
-                        if (obj != null) {
-                            objects.add(obj);
-                        }
-
-                    } catch (Exception e) {
-                        System.err.println("Error parsing line: " + line);
-                        e.printStackTrace();
+                    // Infer object type from name
+                    String nameUpper = satelliteName.toUpperCase();
+                    String inferredType = "UNKNOWN";
+                    if (nameUpper.contains("DEB")) {
+                        inferredType = "DEBRIS";
+                    } else if (nameUpper.contains("R/B") || nameUpper.contains("ROCKET")) {
+                        inferredType = "ROCKET BODY";
+                    } else if (nameUpper.contains("SAT") || nameUpper.contains("STARLINK") || nameUpper.contains("PAYLOAD")) {
+                        inferredType = "PAYLOAD";
                     }
+
+                    SpaceObject obj = switch (inferredType) {
+                        case "DEBRIS" -> new Debris(recordId, satelliteName, country, orbitType, launchYear,
+                                launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
+                        case "ROCKET BODY" -> new RocketBody(recordId, satelliteName, country, orbitType, launchYear,
+                                launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
+                        case "PAYLOAD" -> new Payload(recordId, satelliteName, country, orbitType, launchYear,
+                                launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
+                        default -> new UnknownObject(recordId, satelliteName, country, orbitType, launchYear,
+                                launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
+                    };
+
+                    objects.add(obj);
+                } catch (Exception e) {
+                    System.err.println("Error parsing line: " + line);
+                    e.printStackTrace();
                 }
             }
         } catch (IOException e) {
@@ -96,6 +88,16 @@ public class FileHandler {
 
         return objects;
     }
+
+    private static String getSafe(String[] data, Map<String, Integer> headerMap, String key) {
+        Integer idx = headerMap.get(key.toLowerCase());
+        if (idx != null && idx < data.length) {
+            return data[idx].trim();
+        }
+        return "";
+    }
+    
+
 
     /**
      * Safely parses an integer from a string, returning 0 if parsing fails.
