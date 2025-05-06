@@ -31,7 +31,7 @@ public class SpaceObject {
 * @param conjunctionCount  number of conjunction events
 */
 
-    public SpaceObject(String recordId, String satelliteName, String country, String orbitType,
+    public SpaceObject(String recordId, String satelliteName, String country, String orbitType, 
                        int launchYear, String launchSite, double longitude, double avgLongitude,
                        String geohash, int daysOld, int conjunctionCount) {
         this.recordId = recordId;

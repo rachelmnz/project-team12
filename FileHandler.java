@@ -1,58 +1,93 @@
-import java.util.Map;
-import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * The {@code FileHandler} class is responsible for loading space object data from a CSV file
+ * and creating corresponding {@code SpaceObject} instances. It supports parsing and handling
+ * different types of space objects, such as {@code Debris}, {@code RocketBody}, {@code Payload},
+ * and {@code UnknownObject}.
+ *
+ * <p>This class provides utility methods to safely parse integers and doubles from strings
+ * to handle potential parsing errors gracefully.
+ */
 public class FileHandler {
 
-    public static Map<String, SpaceObject> loadSpaceObjects(String filePath) {
-        Map<String, SpaceObject> objects = new HashMap<>();
+    /**
+     * Loads space objects from a CSV file and returns a list of {@code SpaceObject} instances.
+     *
+     * @param filePath the path to the CSV file containing space object data
+     * @return a list of {@code SpaceObject} instances
+     */
+   
+    public static List<SpaceObject> loadSpaceObjects(String filePath) {
+        List<SpaceObject> objects = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String headerLine = br.readLine();
-            if (headerLine == null) return objects;
-
-            String[] headers = headerLine.split(",", -1);
-            Map<String, Integer> columnIndex = new HashMap<>();
-            for (int i = 0; i < headers.length; i++) {
-                columnIndex.put(headers[i].trim().toLowerCase(), i);
-            }
-
             String line;
+            br.readLine(); // skip header
             while ((line = br.readLine()) != null) {
-                String[] data = line.split(",", -1);
-                try {
-                    String recordId = getValue(data, columnIndex, "recordid");
-                    String satelliteName = getValue(data, columnIndex, "satellitename");
-                    String country = getValue(data, columnIndex, "country");
-                    String orbitType = getValue(data, columnIndex, "orbittype");
-                    String launchSite = getValue(data, columnIndex, "launchsite");
-                    double longitude = parseDoubleSafe(getValue(data, columnIndex, "longitude"));
-                    double avgLongitude = parseDoubleSafe(getValue(data, columnIndex, "avglongitude"));
-                    String geohash = getValue(data, columnIndex, "geohash");
-                    int launchYear = parseIntSafe(getValue(data, columnIndex, "launchyear"));
-                    int daysOld = parseIntSafe(getValue(data, columnIndex, "daysold"));
-                    int conjunctionCount = parseIntSafe(getValue(data, columnIndex, "conjunctioncount"));
+                String[] data = line.split(",", -1); // -1 to include trailing empty fields
 
-                    String inferredType = inferObjectType(satelliteName);
+                if (data.length >= 20) {
+                    try {
+                        String recordId = data[0];
+                        String satelliteName = data[2];
+                        String country = data[3];
+                        String orbitType = data[4];
+                        String launchSite = data[7];
+                        double longitude = parseDoubleSafe(data[8]);
+                        double avgLongitude = parseDoubleSafe(data[9]);
+                        String geohash = data[10];
+                        int launchYear = parseIntSafe(data[6]);
+                        int daysOld = parseIntSafe(data[18]);
+                        int conjunctionCount = parseIntSafe(data[19]);
 
-                    SpaceObject obj = switch (inferredType) {
-                        case "DEBRIS" -> new Debris(recordId, satelliteName, country, orbitType, launchYear,
-                                launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
-                        case "ROCKET BODY" -> new RocketBody(recordId, satelliteName, country, orbitType, launchYear,
-                                launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
-                        case "PAYLOAD" -> new Payload(recordId, satelliteName, country, orbitType, launchYear,
-                                launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
-                        default -> new UnknownObject(recordId, satelliteName, country, orbitType, launchYear,
-                                launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
-                    };
+                        // Infer object type from satellite name
+                        String nameUpper = satelliteName.toUpperCase();
+                        String inferredType = "UNKNOWN";
 
-                    objects.put(recordId, obj);
+                        if (nameUpper.contains("DEB")) {
+                            inferredType = "DEBRIS";
+                        } else if (nameUpper.contains("R/B") || nameUpper.contains("ROCKET")) {
+                            inferredType = "ROCKET BODY";
+                        } else if (nameUpper.contains("SAT") || nameUpper.contains("STARLINK") || nameUpper.contains("PAYLOAD")) {
+                            inferredType = "PAYLOAD";
+                        }
 
-                } catch (Exception e) {
-                    System.err.println("Error parsing line: " + line);
-                    e.printStackTrace();
+                        SpaceObject obj = null;
+
+                        switch (inferredType) {
+                            case "DEBRIS":
+                                obj = new Debris(recordId, satelliteName, country, orbitType, launchYear,
+                                        launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
+                                break;
+                            case "ROCKET BODY":
+                                obj = new RocketBody(recordId, satelliteName, country, orbitType, launchYear,
+                                        launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
+                                break;
+                            case "PAYLOAD":
+                                obj = new Payload(recordId, satelliteName, country, orbitType, launchYear,
+                                        launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
+                                break;
+                            case "UNKNOWN":
+                                obj = new UnknownObject(recordId, satelliteName, country, orbitType, launchYear,
+                                        launchSite, longitude, avgLongitude, geohash, daysOld, conjunctionCount);
+                                break;
+                            default:
+                                break; // Should not reach here
+                        }
+
+                        if (obj != null) {
+                            objects.add(obj);
+                        }
+
+                    } catch (Exception e) {
+                        System.err.println("Error parsing line: " + line);
+                        e.printStackTrace();
+                    }
                 }
             }
         } catch (IOException e) {
@@ -62,11 +97,12 @@ public class FileHandler {
         return objects;
     }
 
-    private static String getValue(String[] data, Map<String, Integer> indexMap, String columnName) {
-        Integer index = indexMap.get(columnName.toLowerCase());
-        return (index != null && index < data.length) ? data[index] : "";
-    }
-
+    /**
+     * Safely parses an integer from a string, returning 0 if parsing fails.
+     *
+     * @param str the string to parse
+     * @return the parsed integer or 0 if parsing fails
+     */
     private static int parseIntSafe(String str) {
         try {
             return Integer.parseInt(str.trim());
@@ -75,6 +111,12 @@ public class FileHandler {
         }
     }
 
+    /**
+     * Safely parses a double from a string, returning 0.0 if parsing fails.
+     *
+     * @param str the string to parse
+     * @return the parsed double or 0.0 if parsing fails
+     */
     private static double parseDoubleSafe(String str) {
         try {
             return Double.parseDouble(str.trim());
@@ -82,13 +124,4 @@ public class FileHandler {
             return 0.0;
         }
     }
-
-    private static String inferObjectType(String name) {
-        String nameUpper = name.toUpperCase();
-        if (nameUpper.contains("DEB")) return "DEBRIS";
-        if (nameUpper.contains("R/B") || nameUpper.contains("ROCKET")) return "ROCKET BODY";
-        if (nameUpper.contains("SAT") || nameUpper.contains("STARLINK") || nameUpper.contains("PAYLOAD")) return "PAYLOAD";
-        return "UNKNOWN";
-    }
 }
-

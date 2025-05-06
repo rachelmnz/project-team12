@@ -20,7 +20,7 @@ public class UnknownObject extends SpaceObject {
 * @param conjunctionCount  number of conjunction events
 */
 
-    public UnknownObject(String recordId, String satelliteName, String country, String orbitType,
+    public UnknownObject(String recordId, String satelliteName, String country, String orbitType, 
                          int launchYear, String launchSite, double longitude, double avgLongitude,
                          String geohash, int daysOld, int conjunctionCount) {
         super(recordId, satelliteName, country, orbitType, launchYear, launchSite,

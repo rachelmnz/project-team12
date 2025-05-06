@@ -18,7 +18,7 @@ public class RocketBody extends SpaceObject {
 * @param daysOld           number of days since the object was launched
 * @param conjunctionCount  number of recorded conjunction events
 */
-    public RocketBody(String recordId, String satelliteName, String country, String orbitType,
+    public RocketBody(String recordId, String satelliteName, String country, String orbitType, 
                       int launchYear, String launchSite, double longitude, double avgLongitude,
                       String geohash, int daysOld, int conjunctionCount) {
         super(recordId, satelliteName, country, orbitType, launchYear, launchSite,

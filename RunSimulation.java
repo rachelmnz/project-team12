@@ -1,4 +1,4 @@
-import java.util.Map;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -6,18 +6,12 @@ import java.util.Scanner;
  * It loads the data and delegates all interface handling to SystemManager.
  */
 public class RunSimulation {
-/** Global scanner used for user input throughout the simulation. */
+
     public static final Scanner scanner = new Scanner(System.in);
-/**
-* Main method that runs the simulation.
-* It loads space object data, sets up the system, and starts the user interface menu.
-*
-* @param args command-line arguments (not used)
-*/
 
     public static void main(String[] args) {
         // Load space object data from CSV
-        Map<String, SpaceObject> spaceObjects = FileHandler.loadSpaceObjects("rso_metrics.csv");
+        List<SpaceObject> spaceObjects = FileHandler.loadSpaceObjects("rso_metrics.csv");
         TrackingSystem tracker = new TrackingSystem(spaceObjects);
 
         // Add test debris object for analysis demo

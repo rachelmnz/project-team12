@@ -19,7 +19,7 @@ public class Satellite extends SpaceObject {
 * @param daysOld           number of days since launch
 * @param conjunctionCount  number of recorded conjunction events
 */
-    public Satellite(String recordId, String satelliteName, String country, String orbitType,
+    public Satellite(String recordId, String satelliteName, String country, String orbitType,     
                      int launchYear, String launchSite, double longitude, double avgLongitude,
                      String geohash, int daysOld, int conjunctionCount) {
         super(recordId, satelliteName, country, orbitType, launchYear, launchSite,
