@@ -296,7 +296,7 @@ public class TrackingSystem {
         }
     }
 
-    private void generateDensityReport(Scanner scanner) {
+    public void generateDensityReport(Scanner scanner) {
         System.out.println("------- Generate Density Report -------");
     
         try{
@@ -329,7 +329,7 @@ public class TrackingSystem {
         }
     }
 
-    private void analyzeLongTermImpact(){
+    public void analyzeLongTermImpact(){
     
         System.out.println("------- Long Term Impact Analysis -------");
         for(int i =0; i<allObjects.size(); i++){

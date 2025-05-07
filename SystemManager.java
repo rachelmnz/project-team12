@@ -50,16 +50,15 @@ public class SystemManager {
             System.out.println("\n===== Main Menu =====");
             System.out.println("1. Login as Scientist");
             System.out.println("2. Login as Space Agency Representative");
-            System.out.println("3. Login as Policy Maker");
-            System.out.println("4. Login as Administrator");
-            System.out.println("5. Create New User");
-            System.out.println("6. Exit");
-            System.out.print("Choose an option (1-6): ");
+            System.out.println("3. Login as Administrator");
+            System.out.println("4. Create New User");
+            System.out.println("5. Exit");
+            System.out.print("Choose an option (1-5): ");
 
             String input = scanner.nextLine();
 
             switch (input) {
-                case "1", "2", "3", "4" -> {
+                case "1", "2", "3" -> {
                     System.out.print("Enter username: ");
                     String username = scanner.nextLine();
                     System.out.print("Enter password: ");
@@ -73,21 +72,20 @@ public class SystemManager {
                         switch (input) {
                             case "1" -> scientistMenu();
                             case "2" -> spaceAgencyMenu();
-                            case "3" -> policyMakerMenu();
-                            case "4" -> administratorMenu();
+                            case "3" -> administratorMenu();
                         }
                     }
                 }
-                case "5" -> {
+                case "4" -> {
                     System.out.print("Enter new username: ");
                     String username = scanner.nextLine();
                     System.out.print("Enter new password: ");
                     String password = scanner.nextLine();
-                    System.out.print("Enter role (Scientist, Space Agency Representative, Policymaker, Administrator): ");
+                    System.out.print("Enter role (Scientist, Space Agency Representative, Administrator): ");
                     String role = scanner.nextLine();
                     userManager.createUser(username, password, role);
                 }
-                case "EXIT", "exit", "Exit", "6" -> {
+                case "EXIT", "exit", "Exit", "5" -> {
                     running = false;
                     System.out.println("You are exiting the program. Have a good day!");
                     scanner.close();
@@ -199,7 +197,7 @@ public class SystemManager {
             System.out.println("Access denied. You are not authorized to access this menu.");
             return;
         }
-        AnalysisContext context = new AnalysisContext();
+        
         boolean back = false;
         while (!back) {
             System.out.println("\n ----- Space Agency Menu -----");
@@ -213,14 +211,13 @@ public class SystemManager {
 
             if (selection.equals("1")) {
                 System.out.println("Currently Analyzing the long term impact");
-                context.setStrategy(new ImpactAnalysis(tracker));
-                context.execute();
+                tracker.analyzeLongTermImpact();
                 //---------------------------------------------------------------------
 
             } else if (selection.equals("2")) {
                 System.out.println("Currently generating the Density Reports");
-                context.setStrategy(new DebrisDensityAnalysis(tracker, scanner));
-                context.execute();
+                Scanner scanner = new Scanner(System.in);
+                tracker.generateDensityReport(scanner);
                 //----------------------------------------------------------------------
 
             } else if (selection.equals("3")) {
@@ -233,38 +230,7 @@ public class SystemManager {
     private String safeReadLine() {
         return scanner.hasNextLine() ? scanner.nextLine() : null;
     }
-
-/**
-* Displays the menu for Policymakers to review reports and assess mission risks.
-*/
-
-    private void policyMakerMenu() {
-        LoggerUtil.log("User '" + currentUser.getUsername() + "' entered Policy Maker menu");
-        if (!currentUser.getRole().equalsIgnoreCase("Policymaker")) {
-            System.out.println("Access denied. You are not authorized to access this menu.");
-            return;
-        }
-        boolean back = false;
-        while (!back) {
-            System.out.println("\n ----- Policymaker Menu -----");
-            System.out.println("1. Review the reports on the Debris Impact");
-            System.out.println("2. Assess the risk levels for future space missions");
-            System.out.println("3. Back");
-            System.out.println("Please select an option from (1-3)");
-
-            String choice = scanner.nextLine();
-
-            if (choice.equals("1")) {
-                System.out.println("[TODO] Reviewing reports on debris impact...");
-            } else if (choice.equals("2")) {
-                System.out.println("[TODO] Assessing risk levels for future space missions...");
-            } else if (choice.equals("3")) {
-                back = true;
-            } else {
-                System.out.println("Invalis input, please input a choice of 1-3");
-            }
-        }
-    }
+    
     
 /**
 * Displays the menu for Administrators to manage users and view logs.
