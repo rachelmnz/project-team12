@@ -307,44 +307,40 @@ public class TrackingSystem {
           scanner.nextLine();
           int count = 0;
     
-          for(int i =0; i< allObjects.size(); i++){
-            SpaceObject obj = allObjects.get(i);
-            double longitude = obj.getLongitude();
-    
-            if(longitude >= min && longitude <= max){
-              System.out.println("Record ID: " + obj.getRecordId());
-              System.out.println("Satellite Name: " + obj.getSatelliteName());
-              System.out.println("Country: " + obj.getCountry());
-              System.out.println("Orbit Type: " + obj.getOrbitType());
-              System.out.println("Launch Year: " + obj.getLaunchYear());
-              System.out.println("Object Type: " + obj.getObjectType());
-              System.out.println("-----------------------------");
-              count++;
-            }
+          for(SpaceObject obj : allObjects){
+              double longitude = obj.getLongitude();
+              if(longitude >= min && longitude <= max){
+                  System.out.println("Record ID: " + obj.getRecordId());
+                  System.out.println("Satellite Name: " + obj.getSatelliteName());
+                  System.out.println("Country: " + obj.getCountry());
+                  System.out.println("Orbit Type: " + obj.getOrbitType());
+                  System.out.println("Launch Year: " + obj.getLaunchYear());
+                  System.out.println("Object Type: " + obj.getObjectType());
+                  System.out.println("-----------------------------");
+                  count++;
+              }
+              
           }
           System.out.println("Total objects that were found in range:" + count);
-        }catch (Exception e){
+        }catch (InputMismatchException e){
           System.out.println("Invalid input, please enter valid numbers.");
           scanner.nextLine();
         }
     }
 
     public void analyzeLongTermImpact(){
-    
         System.out.println("------- Long Term Impact Analysis -------");
-        for(int i =0; i<allObjects.size(); i++){
-          SpaceObject obj = allObjects.get(i);
-    
-          if(obj.getOrbitType().equalsIgnoreCase("LEO") && obj.getDaysOld()>200 && obj.getConjunctionCount()>0){
-             System.out.println("Record ID: " + obj.getRecordId());
-             System.out.println("Satellite Name: " + obj.getSatelliteName());
-             System.out.println("Country: " + obj.getCountry());
-             System.out.println("Orbit Type: " + obj.getOrbitType());
-             System.out.println("Object Type: " + obj.getObjectType());
-             System.out.println("Days Old: " + obj.getDaysOld());
-             System.out.println("Conjunction Count: " + obj.getConjunctionCount());
-             System.out.println("-----------------------------");
-          }
+        for(SpaceObject obj : allObjects){
+            if(obj.getOrbitType() != null && obj.getOrbitType().equalsIgnoreCase("LEO") && obj.getDaysOld() > 200 && obj.getConjunctionCount() >0){
+                System.out.println("Record ID: " + obj.getRecordId());
+                System.out.println("Satellite Name: " + obj.getSatelliteName());
+                System.out.println("Country: " + obj.getCountry());
+                System.out.println("Orbit Type: " + obj.getOrbitType());
+                System.out.println("Object Type: " + obj.getObjectType());
+                System.out.println("Days Old: " + obj.getDaysOld());
+                System.out.println("Conjunction Count: " + obj.getConjunctionCount());
+                System.out.println("-----------------------------"); 
+                }
+            } 
         }
-    }
 }
