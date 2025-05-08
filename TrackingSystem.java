@@ -145,7 +145,17 @@ public class TrackingSystem {
                 }
     
                 // Print full assessment
-                obj.displayInfo();
+                System.out.println("Record ID: " + obj.getRecordId());
+                System.out.println("Satellite Name: " + obj.getSatelliteName());
+                System.out.println("Orbit Type: " + obj.getOrbitType());
+                System.out.println("Days Old: " + obj.getDaysOld());
+                System.out.println("Longitude: " + obj.getLongitude());
+                System.out.println("Average Longitude: " + obj.getAvgLongitude());
+                System.out.println("Conjunction Count: " + obj.getConjunctionCount());
+                System.out.println("Status: " + status);
+                System.out.println("Orbital Drift: " + drift);
+                System.out.println("Risk Level: " + riskLevel);
+                System.out.println("--------------------------------------");
             }
         }
     }

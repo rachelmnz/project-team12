@@ -231,7 +231,7 @@ public class SystemManager {
             } else if (selection.equals("2")) {
                 System.out.println("Currently generating the Density Reports");
                 Scanner scanner = new Scanner(System.in);
-                displayHeader("In longitude range");
+                //displayHeader("In longitude range");
                 tracker.generateDensityReport(scanner);
                 //----------------------------------------------------------------------
 
