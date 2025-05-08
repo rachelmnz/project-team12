@@ -404,7 +404,7 @@ public class TrackingSystem {
     public void analyzeLongTermImpact(){
         System.out.println("------- Long Term Impact Analysis -------");
         for(SpaceObject obj : allObjects){
-            if(obj.getOrbitType() != null && obj.getOrbitType().equalsIgnoreCase("LEO") && obj.getDaysOld() >= 200 && obj.getConjunctionCount() >0){
+            if(obj.getOrbitType() != null && obj.getOrbitType().equalsIgnoreCase("LEO") && obj.getDaysOld() <= 200 && obj.getConjunctionCount() >0){
                 obj.displayInfo();
             } 
         }
