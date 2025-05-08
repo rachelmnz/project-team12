@@ -1,4 +1,5 @@
 import java.util.*;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.IOException;
@@ -207,6 +208,7 @@ public class TrackingSystem {
      * @param filename the name of the CSV file to write
      */
     public void writeUpdatedOrbitCSV(String filename) {
+        filename = getUniqueFilename(filename);
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
             // Header row
             writer.println("record_id,satellite_name,country,orbit_type,launch_year,launch_site,longitude,avg_longitude,geohash,days_old,conjunction_count,still_in_orbit,risk_level");
@@ -253,6 +255,7 @@ public class TrackingSystem {
         int stillInOrbitCount = 0;
         int exitedOrbitCount = 0;
     
+        filename = getUniqueFilename(filename);
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
             writer.println("Exited Debris Report");
             writer.println("====================\n");
@@ -291,6 +294,31 @@ public class TrackingSystem {
             e.printStackTrace();
         }
     }
+
+    private String getUniqueFilename(String baseName) {
+        File file = new File(baseName);
+        if (!file.exists()) return baseName;
+
+        String name;
+        String extension = "";
+
+        int dotIndex = baseName.lastIndexOf('.');
+        if (dotIndex != -1) {
+            name = baseName.substring(0, dotIndex);
+            extension = baseName.substring(dotIndex);
+        } else {
+            name = baseName;
+        }
+
+        int count = 1;
+        while (file.exists()) {
+            file = new File(name + "(" + count + ")" + extension);
+            count++;
+        }
+
+        return file.getName();
+    }
+
 
 /**
  * Generates and displays a density report of space objects based on user-provided longitude range.
