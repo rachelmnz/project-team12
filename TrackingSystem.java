@@ -296,6 +296,29 @@ public class TrackingSystem {
         }
     }
 
+/**
+ * Generates and displays a density report of space objects based on user-provided longitude range.
+ * <p>
+ * This method prompts the user to input a minimum and maximum longitude value using the provided
+ * {@code Scanner}. It then iterates through all space objects and checks if their longitude falls
+ * within the specified range. For each matching object, it prints details including:
+ * 
+ *Record ID
+ *Satellite Name
+ *Country
+ *Orbit Type
+ *Launch Year
+ *Object Type
+ * 
+ * At the end, it prints the total number of objects found in the given range.
+ *
+ *
+ * If the user enters invalid input (non-numeric), an error message is displayed and the method returns.
+ *
+ *
+ * @param scanner the {@code Scanner} object used to read user input
+ */
+
     public void generateDensityReport(Scanner scanner) {
         System.out.println("------- Generate Density Report -------");
     
@@ -327,6 +350,32 @@ public class TrackingSystem {
           scanner.nextLine();
         }
     }
+
+/**
+ * Analyzes and displays long-term impact information for space objects in Low Earth Orbit (LEO).
+ * 
+ * The method iterates through all space objects and filters those that:
+ * 
+ * Are in LEO (case-insensitive)
+ *Have a {@code daysOld} value greater than 200
+ *Have a {@code conjunctionCount} greater than 0
+ *
+ * For each qualifying object, it prints relevant details including:
+ * Record ID, Satellite Name, Country, Orbit Type, Object Type,
+ * Days Old, and Conjunction Count.
+ * 
+ * 
+ * 
+ * Example output:
+ * Record ID: 12345
+ * Satellite Name: Sentinel
+ * Country: USA
+ * Orbit Type: LEO
+ * Object Type: Satellite
+ * Days Old: 450
+ * Conjunction Count: 3
+ *
+ */
 
     public void analyzeLongTermImpact(){
         System.out.println("------- Long Term Impact Analysis -------");
