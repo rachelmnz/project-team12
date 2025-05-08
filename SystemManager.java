@@ -127,26 +127,25 @@ public class SystemManager {
 
                     if (choice.equals("1")) {
                         List<SpaceObject> rockets = tracker.getObjectsByType("ROCKET BODY");
-                        System.out.println("\n--- Rocket Body Details ---");
+                        displayHeader("Rocket Body");
                         for (SpaceObject rocket : rockets) {
-                            System.out.println("Rocket ID: " + rocket.getRecordId() + ", Name: " + rocket.getSatelliteName() + ", Country: " + rocket.getCountry());
                             rocket.displayInfo();
                         }
                     } else if (choice.equals("2")) {
                         List<SpaceObject> debris = tracker.getObjectsByType("DEBRIS");
-                        System.out.println("\n--- Debris Details ---");
+                        displayHeader("Debris");
                         for (SpaceObject d : debris) {
                             d.displayInfo();
                         }
                     } else if (choice.equals("3")) {
                         List<SpaceObject> payloads = tracker.getObjectsByType("PAYLOAD");
-                        System.out.println("\n--- Payload Details ---");
+                        displayHeader("Payload");
                         for (SpaceObject p : payloads) {
                             p.displayInfo();
                         }
                     } else if (choice.equals("4")) {
                         List<SpaceObject> unknowns = tracker.getObjectsByType("UNKNOWN");
-                        System.out.println("\n--- Unknown Object Details ---");
+                        displayHeader("Unknown");
                         for (SpaceObject u : unknowns) {
                             u.displayInfo();
                         }
@@ -167,14 +166,18 @@ public class SystemManager {
                     String choice = scanner.nextLine();
 
                     if (choice.equals("1")) {
+                        displayHeader("In LEO");
                         tracker.trackObjectsInLEO();
+                       
                     } else if (choice.equals("2")) {
+                        displayHeader("In Orbit");
                         tracker.assessDebrisInOrbit();
                         tracker.writeUpdatedOrbitCSV("updated_orbit_report.csv");
                         tracker.writeExitedDebrisReport("exited_debris_report.txt");
 
                     } else if (choice.equals("3")) {
                         backTwo = true;
+
                     } else {
                         System.out.println("Invalid choice, please select an option between 1-3");
                     }
@@ -185,6 +188,16 @@ public class SystemManager {
                 System.out.println("You have chosen an invalid input please pick an option from 1-3.");
             }
         }
+    }
+
+    public void displayHeader(String type){
+        System.out.println("\n--- "+type+ " Object Details ---");
+        System.out.printf(
+            "%-8s | %-25s | %-10s | %-10s | %-6s | %-8s | %10s | %12s | %-12s | %9s | %14s\n",
+            "", "Name", "Country", "Orbit", "Year", "Site", "Longitude", "Avg Long.", "Geohash", "Days Old", "Conjunctions"
+        );
+        System.out.println("--------------------------------------------------------------------------------------------------------------"
+                        + "---------------------------------------------");
     }
 
 /**

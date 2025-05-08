@@ -92,10 +92,13 @@ public class FileHandler {
     private static String getSafe(String[] data, Map<String, Integer> headerMap, String key) {
         Integer idx = headerMap.get(key.toLowerCase());
         if (idx != null && idx < data.length) {
-            return data[idx].trim();
+            String value = data[idx].trim();
+            //System.out.println("DEBUG: Key: " + key + ", Value: [" + value + "]");
+            return value;
         }
         return "";
     }
+    
     
 
 

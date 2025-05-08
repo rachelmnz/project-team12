@@ -29,3 +29,7 @@
 [2025-05-08 09:18:23] User 'er' returned to main menu from Administrator
 [2025-05-08 09:18:23] Main menu displayed
 [2025-05-08 09:18:25] Program terminated.
+[2025-05-08 09:48:34] Main menu displayed
+[2025-05-08 09:48:39] User 'Rachel' entered Scientist menu
+[2025-05-08 09:49:02] Main menu displayed
+[2025-05-08 09:49:05] Program terminated.

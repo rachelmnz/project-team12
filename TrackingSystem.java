@@ -92,18 +92,9 @@ public class TrackingSystem {
     public void trackObjectsInLEO() {
         List<SpaceObject> leoObjects = getObjectsByOrbit("LEO");
     
-        System.out.println("\n--- Objects in LEO ---");
+        //System.out.println("\n--- Objects in LEO ---");
         for (SpaceObject obj : leoObjects) {
-            System.out.println("Record ID: " + obj.getRecordId() +
-                               ", Name: " + obj.getSatelliteName() +
-                               ", Country: " + obj.getCountry() +
-                               ", Orbit Type: " + obj.getOrbitType() +
-                               ", Launch Year: " + obj.getLaunchYear() +
-                               ", Launch Site: " + obj.getLaunchSite() +
-                               ", Longitude: " + obj.getLongitude() +
-                               ", Avg. Longitude: " + obj.getAvgLongitude() +
-                               ", Geohash: " + obj.getGeohash() +
-                               ", Days Old: " + obj.getDaysOld());
+            obj.displayInfo();
         }
     
         if (leoObjects.isEmpty()) {
@@ -117,7 +108,7 @@ public class TrackingSystem {
      * or has an uncertain status, along with its risk level.
      */
     public void assessDebrisInOrbit() {
-        System.out.println("\n--- Debris Orbital Assessment ---");
+        //System.out.println("\n--- Debris Orbital Assessment ---");
     
         for (SpaceObject obj : allObjects) {
             if (obj instanceof Debris) {
@@ -154,12 +145,7 @@ public class TrackingSystem {
                 }
     
                 // Print full assessment
-                System.out.println("ID: " + obj.getRecordId() +
-                        ", Name: " + obj.getSatelliteName() +
-                        ", Status: " + status +
-                        ", Risk Level: " + riskLevel +
-                        ", Orbit Type: " + obj.getOrbitType() +
-                        ", Drift: " + drift);
+                obj.displayInfo();
             }
         }
     }

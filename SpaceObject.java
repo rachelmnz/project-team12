@@ -58,6 +58,8 @@ public class SpaceObject {
         );
     }
 
+    
+
     // Getters
     public String getRecordId() { return recordId; }
     public String getSatelliteName() { return satelliteName; }
