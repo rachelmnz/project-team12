@@ -224,12 +224,14 @@ public class SystemManager {
 
             if (selection.equals("1")) {
                 System.out.println("Currently Analyzing the long term impact");
+                displayHeader("In LEO and Older than 200 days");
                 tracker.analyzeLongTermImpact();
                 //---------------------------------------------------------------------
 
             } else if (selection.equals("2")) {
                 System.out.println("Currently generating the Density Reports");
                 Scanner scanner = new Scanner(System.in);
+                displayHeader("In longitude range");
                 tracker.generateDensityReport(scanner);
                 //----------------------------------------------------------------------
 

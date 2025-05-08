@@ -15,11 +15,11 @@ public class RunSimulation {
         TrackingSystem tracker = new TrackingSystem(spaceObjects);
 
         // Add test debris object for analysis demo
-        tracker.addSpaceObject(new Debris(
+        /*tracker.addSpaceObject(new Debris(
             "T123", "TestDebris", "USA", "LEO",
             2010, "KSC", 45.0, 47.0, "abc123",
             500, 2
-        ));
+        ));*/
 
         UserManager userManager = new UserManager();
         SystemManager manager = new SystemManager(tracker, scanner, userManager);

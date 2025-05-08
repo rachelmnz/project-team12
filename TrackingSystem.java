@@ -366,16 +366,9 @@ public class TrackingSystem {
     public void analyzeLongTermImpact(){
         System.out.println("------- Long Term Impact Analysis -------");
         for(SpaceObject obj : allObjects){
-            if(obj.getOrbitType() != null && obj.getOrbitType().equalsIgnoreCase("LEO") && obj.getDaysOld() > 200 && obj.getConjunctionCount() >0){
-                System.out.println("Record ID: " + obj.getRecordId());
-                System.out.println("Satellite Name: " + obj.getSatelliteName());
-                System.out.println("Country: " + obj.getCountry());
-                System.out.println("Orbit Type: " + obj.getOrbitType());
-                System.out.println("Object Type: " + obj.getObjectType());
-                System.out.println("Days Old: " + obj.getDaysOld());
-                System.out.println("Conjunction Count: " + obj.getConjunctionCount());
-                System.out.println("-----------------------------"); 
-                }
+            if(obj.getOrbitType() != null && obj.getOrbitType().equalsIgnoreCase("LEO") && obj.getDaysOld() >= 200 && obj.getConjunctionCount() >0){
+                obj.displayInfo();
             } 
         }
+    }
 }
